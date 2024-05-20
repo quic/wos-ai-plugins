@@ -1,0 +1,12 @@
+{
+  "graphs": [{
+    "O": 3,
+    "fp16_relaxed_precision": 0,
+    "vtcm_mb": 8
+  }],
+  "devices": [
+    {
+      "pd_session": "unsigned"
+    }
+  ]
+}

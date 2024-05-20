@@ -1,0 +1,22 @@
+
+table QnnTensorInfo {
+    id:uint;
+    name:string;
+}
+
+table QnnGraphInfo {
+    name:string;
+    inputTensorsCount:uint;
+    inputTensorsInfo:[QnnTensorInfo];
+    outputTensorsCount:uint;
+    outputTensorsInfo:[QnnTensorInfo];
+}
+
+table ContextCache {
+    graphsCount:uint;
+    graphsInfo:[QnnGraphInfo];
+    binaryCacheSize:uint;
+    binaryCache:[ubyte];
+}
+
+root_type ContextCache;

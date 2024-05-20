@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "dlfcn-win32",
+    "opencv",
+    "flatbuffers",
+    "dirent",
+    "winsock2"
+  ]
+}

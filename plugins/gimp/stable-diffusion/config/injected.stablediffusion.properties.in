@@ -1,0 +1,33 @@
+App.Version.Major=1
+App.Version.Minor=0
+App.Version.Teeny=0
+RUNlib.location=@RUNLibLocation@
+ndk.dir=@AndroidNdk@
+AppConfig.files=@AppConfigfiles@
+AppCustomLib.srcdir=@AppCustomLibSrcDir@
+AppCustomlib.includedir=@AppCustomLibIncludeDir@
+AppCustomLib.name=@AppCustomLibName@
+NativeLibs.dir=@NativeLibsDir@
+model.version.dir=StableDiffusion1.0
+model.version=StableDiffusion1.0
+app.name=Stable Diffusion Demo App
+package.name=com.qualcomm.stablediffusion
+app.title=Stable Diffusion
+
+model_context=m1:unet.serialized.bin,m2:vae_decoder.serialized.bin,m3:text_encoder.serialized.bin
+model_exec_order=m1,m2,m3
+
+input_tensor_name=m1:input_3
+output_tensor_name=m2:output_1
+
+latent_tensor_name=m1:input_1
+tsembed_tensor_name=m1:input_2
+
+backend_extensions_lib=QnnHtpNetRunExtensions.dll
+backend_extensions_config=htp_backend_ext_config.json
+
+data_loader_input_tarfile=sd_precomute_data.tar
+
+demo_data_folder=StableDiffusionData
+
+sample_prompt_list=sample_prompt_list.txt
