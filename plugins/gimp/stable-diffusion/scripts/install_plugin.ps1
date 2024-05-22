@@ -36,12 +36,12 @@ function Download-Stable-Diffusion-Models {
 
 function Download-QNN-SDK-Libraries {
     echo "Downloading QNN SDK..."
-    If (-not (Test-Path "$current_dir/2.20.0.240223")) {
+    If (-not (Test-Path "$current_dir/qairt/2.22.0.240425")) {
         Invoke-WebRequest "$qnn_sdk_url" -OutFile "$current_dir/qnn_sdk.zip"
         Expand-Archive "$current_dir/qnn_sdk.zip" -DestinationPath "$current_dir/"
         Remove-Item "$current_dir/qnn_sdk.zip"
     }
-    $qnn_sdk_root = "$current_dir/2.20.0.240223"
+    $qnn_sdk_root = "$current_dir/qairt/2.22.0.240425"
 
     cp "$qnn_sdk_root/lib/arm64x-windows-msvc/QnnHtp.dll" "$current_dir/$plugin_name/"
     cp "$qnn_sdk_root/lib/arm64x-windows-msvc/QnnHtpPrepare.dll" "$current_dir/$plugin_name/"
@@ -58,7 +58,7 @@ function Copy-Plugin-To-Gimp {
 try {
     $plugin_name = "sd-snapdragon"
     $ai_hub_base_url = "https://qaihub-public-assets.s3.us-west-2.amazonaws.com"
-    $qnn_sdk_url = "$ai_hub_base_url/qai-hub-apps/qnn/linux/2.20.0.240223.zip"
+    $qnn_sdk_url = "https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.22.0.240425.zip"
     $model_data_base_url = "$ai_hub_base_url/qai-hub-models/models/riffusion_quantized/v1"
     $models_base_url = "$ai_hub_base_url/qai-hub-models/models/stable_diffusion_v1_5_quantized/v1/QNN220"
     $gimp_plugin_path = "C:\Users\$Env:UserName\AppData\Roaming\GIMP\2.10\plug-ins"

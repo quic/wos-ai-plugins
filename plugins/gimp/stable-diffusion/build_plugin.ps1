@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 
 function Prepare-Plugin-Release {
     New-Item "$current_dir/build/plugin-release/sd-snapdragon" -ItemType directory -ea 0
@@ -18,12 +17,12 @@ function Build-Tokenizer {
 }
 
 function Download-QNN-SDK {
-    If (-not (Test-Path "$current_dir/build/2.20.0.240223")) {
+    If (-not (Test-Path "$current_dir/build/qairt/2.22.0.240425")) {
         Invoke-WebRequest "$qnn_sdk_url" -OutFile "$current_dir/build/qnn_sdk.zip"
         Expand-Archive "$current_dir/build/qnn_sdk.zip" -DestinationPath "$current_dir/build/"
     }
-    $qnn_sdk_root = "$current_dir/build/2.20.0.240223"
-    [System.Environment]::SetEnvironmentVariable("QNN_SDK_ROOT", $qnn_sdk_root, "Machine")
+    $qnn_sdk_root = "$current_dir\build\qairt\2.22.0.240425"
+    $env:QNN_SDK_ROOT = "$qnn_sdk_root"
     write-output "QNN SDK root : " $qnn_sdk_root
 }
 
@@ -47,7 +46,7 @@ function Build-Stable-Diffusion {
 try {
     $vcpkg_url = "https://github.com/microsoft/vcpkg"
     $ai_hub_base_url = "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-apps"
-    $qnn_sdk_url = "$ai_hub_base_url/qnn/linux/2.20.0.240223.zip"
+    $qnn_sdk_url = "https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.22.0.240425.zip"
     $ErrorActionPreference = "Stop"
     $initial_dir = (Get-Item .).FullName
     $current_dir = $PSScriptRoot
