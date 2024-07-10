@@ -1,6 +1,6 @@
 # AI Plugins for Windows on Snapdragon: Enhancing Applications with On-Device AI
 
-Welcome to our repository! Here, we provide a collection of AI plugins specifically designed for Windows on Snapdragon applications. These plugins are developed using the [Qualcomm Neural Processing SDK for AI (QNN)](https://www.qualcomm.com/developer/software/neural-processing-sdk-for-ai).
+Welcome to our repository! Here, we provide a collection of AI plugins specifically designed for Windows on Snapdragon applications. These plugins are developed using the [Qualcomm AI Engine Direct SDK (QNN)](https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk).
 
 ## Key Features
 
