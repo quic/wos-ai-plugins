@@ -27,8 +27,8 @@ cd stable-diffusion-webui
 ```
 
 ### Step 2: Download Extension
-Download `stable-diffusion-webui-qairt-extension.zip` from the latest release.
-unzip and place the `qairt_accelerate` extension under `stable-diffusion-webui\extensions`
+Download `stable-diffusion-webui-qairt-extension.zip` from the [latest release](https://github.com/quic/wos-ai-plugins/releases/tag/v1.0-automatic1111-webui).
+Unzip and place the `qairt_accelerate` extension under `stable-diffusion-webui\extensions`
 
 ### Step 3: Launch the WebUI
 
