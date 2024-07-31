@@ -11,11 +11,14 @@ Our AI plugins offer the following key features:
 
 ## List of Plugins
 
-### Stable Diffusion plugin for GIMP
+### <img src="plugins\gimp\stable-diffusion\docs\resources\gimp.png" alt="drawing" style="width:30px;"/> Stable Diffusion plugin for GIMP
 - [Overview and usage](plugins/gimp/stable-diffusion/README.md)
 - [Quick Installation](plugins/gimp/stable-diffusion/docs/install.md)
 - [Build Instructions](plugins/gimp/stable-diffusion/docs/build.md)
 
-## License Information
+### <img src="plugins\stable-diffusion-webui\qairt_accelerate\docs\resources\main_icon.png" alt="drawing" style="width:30px;border-radius: 50%;"/> AUTOMATIC1111 stable-diffusion-webui Extension
+- [Overview and Installation](plugins/stable-diffusion-webui/qairt_accelerate/README.md)
+
+##  License Information
 
 This project is licensed under the [BSD-3-Clause License](https://spdx.org/licenses/BSD-3-Clause.html). For the full license text, please refer to the [LICENSE](LICENSE) file in this repository.
