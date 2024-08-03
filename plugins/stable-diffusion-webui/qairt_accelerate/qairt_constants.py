@@ -10,7 +10,7 @@
 import os
 from modules.paths_internal import script_path, extensions_dir
 
-QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.24.0.240710.zip"
+QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.24.0.240626.zip"
 QAI_APPBUILDER_WHEEL="https://github.com/quic/ai-engine-direct-helper/releases/download/v2.24.0/qai_appbuilder-2.24.0-cp310-cp310-win_amd64.whl"
 
 QAIRT_VERSION = "2.24.0.240626"
