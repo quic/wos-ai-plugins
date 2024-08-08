@@ -13,8 +13,8 @@ import platform
 
 
 # check python version to be 3.10.6+. As qai_appbuilder is built on 3.10.6
-if (not platform.python_version().startswith("3.10.")) or (int(platform.python_version().split(".")[2])<6):
-    raise Exception("Python version needs to be >=3.10.6 and <3.10.14")
+if platform.python_version() != "3.10.6":
+    raise Exception("Python version needs to be 3.10.6")
 
 if not launch.is_installed("qai_appbuilder"):
     launch.run_pip(

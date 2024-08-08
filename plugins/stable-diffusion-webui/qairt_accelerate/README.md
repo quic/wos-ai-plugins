@@ -17,20 +17,24 @@ Stable Diffusion WebUI can now be run on Qualcomm X-Elite NPU with [Qualcomm AI 
 
 ## Instructions to run WebUI with QAIRT (Windows):
 
-### Step 1: Download AUTOMATIC1111 stable-diffusion-webui
+### Step 1: Install Dependencies
+Download and install [git](https://github.com/git-for-windows/git/releases/download/v2.39.2.windows.1/Git-2.39.2-64-bit.exe) and [Python 3.10.6](https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe)
+
+> **_NOTE:_** The program is tested to work on Python `3.10.6`. Don't use other versions.
+
+### Step 2: Download AUTOMATIC1111 stable-diffusion-webui
 Run below commands in Windows PowerShell terminal.
 
 ```
-# Make sure Python version is >=3.10.6 and <3.10.14
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
 cd stable-diffusion-webui
 ```
 
-### Step 2: Download Extension
+### Step 3: Download Extension
 Download `stable-diffusion-webui-qairt-extension.zip` from the [latest release](https://github.com/quic/wos-ai-plugins/releases/tag/v1.0-automatic1111-webui).
 Unzip and place the `qairt_accelerate` extension under `stable-diffusion-webui\extensions`
 
-### Step 3: Launch the WebUI
+### Step 4: Launch the WebUI
 
 ```
 $env:TORCH_INDEX_URL="https://download.pytorch.org/whl/cpu"
@@ -40,3 +44,10 @@ $env:WEBUI_LAUNCH_LIVE_OUTPUT=1
 ```
 
 The steps above will create a virtual environment and install the required packages into this environment.
+
+
+## Troubleshooting
+
+* To reinstall from scratch, delete directory: `venv` folder
+
+Go-to: https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Troubleshooting
