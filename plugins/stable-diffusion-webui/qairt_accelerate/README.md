@@ -48,6 +48,6 @@ The steps above will create a virtual environment and install the required packa
 
 ## Troubleshooting
 
-* To reinstall from scratch, delete directory: `venv` folder
+* To reinstall from scratch, delete directory: `venv`
 
 Go-to: https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Troubleshooting
