@@ -12,7 +12,8 @@ Stable Diffusion WebUI can now be run on Qualcomm X-Elite NPU with [Qualcomm AI 
 ## Supported features
 
 * Original txt2img mode with SD 1.5 and 2.1
-* Sampling methods: DPM++ 2M
+* Original img2img mode with ControlNet canny and Stable Diffusion 2.1 unclip model
+* Sampling methods: [DPM++ 2M, Euler a, Euler, LMS, Heun, dpmsolver++, LMS Karras, DPM++ 2M Karras, dpmsolver++, DDIM, PLMS]
 * Upscaling methods: ESRGAN-x4
 
 ## Instructions to run WebUI with QAIRT (Windows):

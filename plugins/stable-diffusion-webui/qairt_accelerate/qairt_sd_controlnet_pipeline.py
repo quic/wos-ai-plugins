@@ -18,6 +18,8 @@ from diffusers import DPMSolverMultistepScheduler
 from modules import paths, shared, modelloader
 from qai_appbuilder import (
     QNNContext,
+    QNNContextProc,
+    QNNShareMemory,
     Runtime,
     LogLevel,
     ProfilingLevel,
@@ -37,40 +39,81 @@ from diffusers import (
     PNDMScheduler,
 )
 import qairt_constants as consts
-from pipeline_utils import StableDiffusionInput, UpscalerPipeline, QPipeline, set_scheduler
-
-model_path_1_5 = os.path.abspath(
-    os.path.join(paths.models_path, "Stable-diffusion", "qcom-Stable-Diffusion-v1.5")
-)
-model_path_2_1 = os.path.abspath(
-    os.path.join(paths.models_path, "Stable-diffusion", "qcom-Stable-Diffusion-v2.1")
-)
+from pipeline_utils import StableDiffusionInput, download_qualcomm_models_hf, UpscalerPipeline, QPipeline, set_scheduler
 from modules.safe import unsafe_torch_load as load
+
 
 class TextEncoder(QNNContext):
     # @timer
-    def Inference(self, input_data, sd_version):
+    def Inference(self, input_data):
         input_datas = [input_data]
-        output_data = super().Inference(input_datas, perf_profile="burst")[0]
+        output_data = super().Inference(input_datas)[0]
 
         # Output of Text encoder should be of shape (1, 77, 768)
-        if sd_version == "1.5":
-            output_data = output_data.reshape((1, 77, 768))
-        elif sd_version == "2.1":
-            output_data = output_data.reshape((1, 77, 1024))
+        output_data = output_data.reshape((1, 77, 768))
         return output_data
 
 
 class Unet(QNNContext):
     # @timer
-    def Inference(self, input_data_1, input_data_2, input_data_3):
+    def Inference(
+        self,
+        input_data_1,
+        input_data_2,
+        input_data_3,
+        input_data_4,
+        input_data_5,
+        input_data_6,
+        input_data_7,
+        input_data_8,
+        input_data_9,
+        input_data_10,
+        input_data_11,
+        input_data_12,
+        input_data_13,
+        input_data_14,
+        input_data_15,
+        input_data_16,
+    ):
         # We need to reshape the array to 1 dimensionality before send it to the network. 'input_data_2' already is 1 dimensionality, so doesn't need to reshape.
         input_data_1 = input_data_1.reshape(input_data_1.size)
         input_data_3 = input_data_3.reshape(input_data_3.size)
+        input_data_4 = input_data_4.reshape(input_data_4.size)
+        input_data_5 = input_data_5.reshape(input_data_5.size)
+        input_data_6 = input_data_6.reshape(input_data_6.size)
 
-        input_datas = [input_data_1, input_data_2, input_data_3]
-        output_data = super().Inference(input_datas, perf_profile="burst")[0]
+        input_data_7 = input_data_7.reshape(input_data_7.size)
+        input_data_8 = input_data_8.reshape(input_data_8.size)
+        input_data_9 = input_data_9.reshape(input_data_9.size)
+        input_data_10 = input_data_10.reshape(input_data_10.size)
+        input_data_11 = input_data_11.reshape(input_data_11.size)
 
+        input_data_12 = input_data_12.reshape(input_data_12.size)
+        input_data_13 = input_data_13.reshape(input_data_13.size)
+        input_data_14 = input_data_14.reshape(input_data_14.size)
+        input_data_15 = input_data_15.reshape(input_data_15.size)
+        input_data_16 = input_data_16.reshape(input_data_16.size)
+
+        input_datas = [
+            input_data_1,
+            input_data_2,
+            input_data_3,
+            input_data_4,
+            input_data_5,
+            input_data_6,
+            input_data_7,
+            input_data_8,
+            input_data_9,
+            input_data_10,
+            input_data_11,
+            input_data_12,
+            input_data_13,
+            input_data_14,
+            input_data_15,
+            input_data_16,
+        ]
+
+        output_data = super().Inference(input_datas)[0]
         output_data = output_data.reshape(1, 64, 64, 4)
         return output_data
 
@@ -81,40 +124,56 @@ class VaeDecoder(QNNContext):
         input_data = input_data.reshape(input_data.size)
         input_datas = [input_data]
 
-        output_data = super().Inference(input_datas, perf_profile="burst")[0]
+        output_data = super().Inference(input_datas)[0]
 
         return output_data
 
-class QnnStableDiffusionPipeline(QPipeline):
+
+class ControlNet(QNNContext):
+    # @timer
+    def Inference(self, input_data_1, input_data_2, input_data_3, input_data_4):
+        # We need to reshape the array to 1 dimensionality before send it to the network. 'input_data_2' already is 1 dimensionality, so doesn't need to reshape.
+
+        input_data_1 = input_data_1.reshape(input_data_1.size)
+        input_data_3 = input_data_3.reshape(input_data_3.size)
+        input_data_4 = input_data_4.reshape(input_data_4.size)
+
+        input_datas = [input_data_1, input_data_2, input_data_3, input_data_4]
+        output_data = super().Inference(input_datas)
+        return output_data
+
+def get_model_path(model_name):
+    return os.path.abspath(
+        os.path.join(
+            paths.models_path, "Stable-diffusion", f"qcom-{model_name}"
+        )
+    )
+
+class QnnControlNetPipeline(QPipeline):
     TOKENIZER_MAX_LENGTH = 77  # Define Tokenizer output max length (must be 77)
+
     scheduler = None
     tokenizer = None
     text_encoder = None
     unet = None
     vae_decoder = None
+    controlnet = None
 
     unet_time_embeddings_1_5 = None
     unet_time_embeddings_2_1 = None
 
-    sd_version = None
-
     def __init__(self, model_name):
+        print(f"model_name in CNPipeline: {model_name}")
         super().__init__(model_name)
-        self.set_model_version(model_name)
-
         self.unet_time_embeddings_1_5 = TimestepEmbedding(320, 1280)
-        self.unet_time_embeddings_1_5.load_state_dict(load(consts.TIMESTEP_EMBEDDING_1_5_MODEL_PATH))
-        self.unet_time_embeddings_2_1 = TimestepEmbedding(320, 1280)
-        self.unet_time_embeddings_2_1.load_state_dict(load(consts.TIMESTEP_EMBEDDING_2_1_MODEL_PATH))
-
+        self.unet_time_embeddings_1_5.load_state_dict(
+            load(consts.TIMESTEP_EMBEDDING_1_5_MODEL_PATH)
+        )
         self.load_model()
 
         torch.from_numpy(
             np.array([1])
         )  # Let LazyImport to import the torch & numpy lib here.
-
-    def is_sd_1_5(self):
-        return self.sd_version == "1.5"
 
     def run_tokenizer(self, prompt):
         text_input = self.tokenizer(
@@ -169,11 +228,26 @@ class QnnStableDiffusionPipeline(QPipeline):
         emb = unet_time_embeddings(t_emb).detach().numpy()
         return emb
 
-    def set_model_version(self, model_name):
-        if model_name == "Stable-Diffusion-1.5":
-            self.sd_version = "1.5"
-        elif model_name == "Stable-Diffusion-2.1":
-            self.sd_version = "2.1"
+    def make_canny_image(self, input_image: Image):
+        image = np.asarray(input_image)
+
+        # Get edges for input with Canny Edge Detection
+        low_threshold = 100
+        high_threshold = 200
+        image = cv2.resize(image, (512, 512))
+
+        image = cv2.Canny(image, low_threshold, high_threshold)
+        # cv2.imwrite(os.path.join(consts.OUTPUTS_DIR, "canny.png"), image)
+        image = image[:, :, None]
+        image = np.concatenate([image, image, image], axis=2)
+
+        image = Image.fromarray(image)
+
+        image = np.array(image)
+        image = image[None, :]
+
+        image = image.astype(np.float32) / 255.0
+        return image
 
     def load_model(self):
         QNNConfig.Config(
@@ -183,25 +257,29 @@ class QnnStableDiffusionPipeline(QPipeline):
         model_text_encoder = "text_encoder"
         model_unet = "model_unet"
         model_vae_decoder = "vae_decoder"
+        model_controlnet = "controlnet"
 
-        model_path = None
-        if self.is_sd_1_5():
-            model_path = model_path_1_5
-            # Initializing the Tokenizer
-            self.tokenizer = CLIPTokenizer.from_pretrained(
-                "openai/clip-vit-base-patch32", cache_dir=consts.CACHE_DIR
+        model_path = get_model_path(model_name=self.model_name)
+        if not os.path.exists(model_path):
+            download_qualcomm_models_hf(
+                model_path,
+                consts.CONTROLNET_1_0_SD_1_5_CANNY_REPO_ID,
+                [
+                    "TextEncoder_Quantized.bin",
+                    "ControlNet_Quantized.bin",
+                    "UNet_Quantized.bin",
+                    "VAEDecoder_Quantized.bin",
+                ],
+                consts.CONTROLNET_1_0_SD_1_5_CANNY_REVISION,
             )
-        else:
-            model_path = model_path_2_1
-            self.tokenizer = CLIPTokenizer.from_pretrained(
-                "stabilityai/stable-diffusion-2-1-base",
-                subfolder="tokenizer",
-                revision="main",
-                cache_dir=consts.CACHE_DIR,
-            )
+        # Initializing the Tokenizer
+        self.tokenizer = CLIPTokenizer.from_pretrained(
+            "openai/clip-vit-base-patch32", cache_dir=consts.CACHE_DIR
+        )
         text_encoder_model = "{}\\TextEncoder_Quantized.bin".format(model_path)
         unet_model = "{}\\UNet_Quantized.bin".format(model_path)
         vae_decoder_model = "{}\\VAEDecoder_Quantized.bin".format(model_path)
+        controlnet_model = "{}\\ControlNet_Quantized.bin".format(model_path)
         print(f"Loading models from {model_path}")
         # Instance for Unet
         self.unet = Unet(model_unet, unet_model)
@@ -212,12 +290,15 @@ class QnnStableDiffusionPipeline(QPipeline):
         # Instance for VaeDecoder
         self.vae_decoder = VaeDecoder(model_vae_decoder, vae_decoder_model)
 
+        # Instance for ControlNet
+        self.controlnet = ControlNet(model_controlnet, controlnet_model)
+
     def reload_model(self, model_name):
-        self.set_model_version(model_name)
         del self.tokenizer
         del self.text_encoder
         del self.unet
         del self.vae_decoder
+        del self.controlnet
         self.load_model()
 
     # Execute the Stable Diffusion pipeline
@@ -227,12 +308,9 @@ class QnnStableDiffusionPipeline(QPipeline):
         callback,
         upscaler_pipeline: UpscalerPipeline,
     ) -> Image:
-        image = None
+        image = sd_input.input_image
         PerfProfile.SetPerfProfileGlobal(PerfProfile.BURST)
-        if self.sd_version == "2.1":
-            self.scheduler = set_scheduler("stabilityai/stable-diffusion-2-base", sd_input.sampler_name)
-        elif self.sd_version == "1.5":
-            self.scheduler = set_scheduler("stable-diffusion-v1-5/stable-diffusion-v1-5", sd_input.sampler_name)
+        self.scheduler = set_scheduler("stable-diffusion-v1-5/stable-diffusion-v1-5", sd_input.sampler_name)
 
         self.scheduler.set_timesteps(
             sd_input.user_step
@@ -243,10 +321,8 @@ class QnnStableDiffusionPipeline(QPipeline):
         uncond_tokens = self.run_tokenizer(sd_input.uncond_prompt)
 
         # Run Text Encoder on Tokens
-        uncond_text_embedding = self.text_encoder.Inference(
-            uncond_tokens, self.sd_version
-        )
-        user_text_embedding = self.text_encoder.Inference(cond_tokens, self.sd_version)
+        uncond_text_embedding = self.text_encoder.Inference(uncond_tokens)
+        user_text_embedding = self.text_encoder.Inference(cond_tokens)
 
         # Initialize the latent input with random initial latent
         random_init_latent = torch.randn(
@@ -254,21 +330,32 @@ class QnnStableDiffusionPipeline(QPipeline):
         ).numpy()
         latent_in = random_init_latent.transpose(0, 2, 3, 1)
 
+        # image = load_image(input_image_path)
+        canny_image = self.make_canny_image(image)
+
         # Run the loop for user_step times
         for step in range(sd_input.user_step):
             # print(f"Step {step} Running...")
 
             time_step = self.get_timestep(step)
-            unet_time_embeddings = self.unet_time_embeddings_1_5
-            if not self.is_sd_1_5():
-                unet_time_embeddings = self.unet_time_embeddings_2_1
-            time_embedding = self.get_time_embedding(time_step, unet_time_embeddings)
+            time_embedding = self.get_time_embedding(
+                time_step, self.unet_time_embeddings_1_5
+            )
+
+            controlnet_out = self.controlnet.Inference(
+                latent_in, time_embedding, user_text_embedding, canny_image
+            )
+
+            conditional_noise_pred = self.unet.Inference(
+                latent_in, time_embedding, user_text_embedding, *controlnet_out
+            )
+
+            controlnet_out = self.controlnet.Inference(
+                latent_in, time_embedding, uncond_text_embedding, canny_image
+            )
 
             unconditional_noise_pred = self.unet.Inference(
-                latent_in, time_embedding, uncond_text_embedding
-            )
-            conditional_noise_pred = self.unet.Inference(
-                latent_in, time_embedding, user_text_embedding
+                latent_in, time_embedding, uncond_text_embedding, *controlnet_out
             )
 
             latent_in = self.run_scheduler(
@@ -278,6 +365,7 @@ class QnnStableDiffusionPipeline(QPipeline):
                 latent_in,
                 time_step,
             )
+
             callback(step)
 
         # Run VAE
@@ -315,6 +403,7 @@ class QnnStableDiffusionPipeline(QPipeline):
         if self.scheduler:
             del self.scheduler
         del self.tokenizer
+        del self.controlnet
 
     def is_model_loaded(self):
         return self.unet != None

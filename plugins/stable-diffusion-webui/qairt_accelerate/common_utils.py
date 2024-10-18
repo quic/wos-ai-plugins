@@ -21,7 +21,7 @@ def run_command(command, live: bool = True):
         env = os.environ.copy()
         env['PYTHONPATH'] = f"{os.path.abspath('.')}{os.pathsep}{env.get('PYTHONPATH', '')}"
 
-        stdout = run(command, errdesc=f"Error running command", live=live).strip()
+        stdout = run(command, errdesc=f"Error running command", live=live, custom_env=env).strip()
         if stdout:
             print(stdout)
     except Exception as e:
