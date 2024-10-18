@@ -6,23 +6,16 @@
 #
 # =============================================================================
 
-import time
 from PIL import Image
-import PIL
 import os
-import sys
-import shutil
-import cv2
 import numpy as np
 import torch
 from skimage.transform import resize
 from modules.safe import unsafe_torch_load as load
-from transformers import CLIPTokenizer, CLIPImageProcessor, CLIPVisionModelWithProjection, CLIPTextModel
+from transformers import CLIPTokenizer, CLIPImageProcessor
 # from modules import paths, shared, modelloader
 from qai_appbuilder import (
     QNNContext,
-    QNNContextProc,
-    QNNShareMemory,
     Runtime,
     LogLevel,
     ProfilingLevel,
@@ -30,13 +23,12 @@ from qai_appbuilder import (
     QNNConfig,
     timer,
 )
-from diffusers import UNet2DConditionModel, DDPMScheduler
-from diffusers.pipelines.stable_diffusion.stable_unclip_image_normalizer import StableUnCLIPImageNormalizer
-from diffusers.models.embeddings import get_timestep_embedding, TimestepEmbedding, Timesteps
+from diffusers import DDPMScheduler
+from diffusers.models.embeddings import get_timestep_embedding, TimestepEmbedding
 import install
 import common_utils as utils
 import qairt_constants as consts
-from pipeline_utils import StableDiffusionInput, download_qualcomm_models_hf, UpscalerPipeline, QPipeline, set_scheduler
+from pipeline_utils import StableDiffusionInput, UpscalerPipeline, QPipeline, set_scheduler
 
 
 class TextEncoder(QNNContext):

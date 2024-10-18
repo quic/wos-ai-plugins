@@ -97,9 +97,6 @@ class Script(scripts.Script):
         time_start = time.time()
 
         user_seed = get_fixed_seed(p.seed)
-        supported_samplers = ["DPM++ 2M"]
-        # if p.sampler_name not in supported_samplers:
-        #     p.sampler_name = "DPM++ 2M"
 
         sd_input = StableDiffusionInput(
             self.is_txt2img,

@@ -6,16 +6,12 @@
 #
 # =============================================================================
 
-import time
 from PIL import Image
 import os
-import shutil
-import cv2
 import numpy as np
 import torch
 from transformers import CLIPTokenizer
-from diffusers import DPMSolverMultistepScheduler
-from modules import paths, shared, modelloader
+from modules import paths
 from qai_appbuilder import (
     QNNContext,
     Runtime,
@@ -25,17 +21,7 @@ from qai_appbuilder import (
     QNNConfig,
     timer,
 )
-from diffusers import UNet2DConditionModel
 from diffusers.models.embeddings import get_timestep_embedding, TimestepEmbedding
-from diffusers import (
-    DDIMScheduler,
-    DPMSolverMultistepScheduler,
-    EulerAncestralDiscreteScheduler,
-    EulerDiscreteScheduler,
-    HeunDiscreteScheduler,
-    LMSDiscreteScheduler,
-    PNDMScheduler,
-)
 import qairt_constants as consts
 from pipeline_utils import StableDiffusionInput, UpscalerPipeline, QPipeline, set_scheduler
 
