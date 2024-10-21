@@ -19,6 +19,9 @@ Our AI plugins offer the following key features:
 ### <img src="plugins\stable-diffusion-webui\qairt_accelerate\docs\resources\main_icon.png" alt="drawing" style="width:30px;border-radius: 50%;"/> AUTOMATIC1111 stable-diffusion-webui Extension
 - [Overview and Installation](plugins/stable-diffusion-webui/qairt_accelerate/README.md)
 
+### <img src="plugins\blender\SnapdragonImageGeneration\docs\resources\main_icon.jpg" alt="drawing" style="width:30px;border-radius: 50%;"/> Blender ControlNet Plugin
+- [Overview and Installation](plugins/blender/SnapdragonImageGeneration/README.md)
+
 ##  License Information
 
 This project is licensed under the [BSD-3-Clause License](https://spdx.org/licenses/BSD-3-Clause.html). For the full license text, please refer to the [LICENSE](LICENSE) file in this repository.
