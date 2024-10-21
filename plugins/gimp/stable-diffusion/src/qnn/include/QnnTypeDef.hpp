@@ -1,3 +1,10 @@
+/*
+**************************************************************************************************
+* Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+* SPDX-License-Identifier: BSD-3-Clause-Clear
+**************************************************************************************************
+*/
+
 #ifndef QNN_TYPE_DEF_H_
 #define QNN_TYPE_DEF_H_
 
