@@ -65,6 +65,8 @@ void showHelp()
         << "  --output_dir        <DIR>       The directory to save output to. Defaults to "
            "./output.\n"
         << "\n"
+        << "  --model_version      <VAL>      Version of StableDiffusion can be chosen here.\n "
+        << "\n"
         << "  --output_data_type  <VAL>       Data type of the output. Values can be:\n\n"
            "                                    1. float_only:       dump outputs in float only.\n"
            "                                    2. native_only:      dump outputs in data type "
@@ -163,6 +165,8 @@ bool processCommandLine(int argc,
         OPT_SEED = 16,
         OPT_STEP = 17,
         OPT_GUIDANCE_SCALE = 18,
+        OPT_MODEL_VERSION = 19
+        
     };
 
     const int noArgument = 0;
@@ -174,6 +178,7 @@ bool processCommandLine(int argc,
         {"config_file_Path", requiredArgument, NULL, OPT_CFG_FILE_PATH},
         {"backend", requiredArgument, NULL, OPT_BACKEND},
         {"system_library", requiredArgument, NULL, OPT_SYSTEM_LIBRARY},
+        {"model_version", requiredArgument, NULL, OPT_MODEL_VERSION},
         {NULL, 0, NULL, 0}};
 
     // Command line parsing loop
@@ -183,6 +188,7 @@ bool processCommandLine(int argc,
     std::string backEndPath;
     std::string systemLibraryPath;
     std::string prompt;
+    std::string model_version = VERSION_1_5;
     int seed = 0;
     float guidance_scale = 7.5;
     int step = 20;
@@ -212,7 +218,16 @@ bool processCommandLine(int argc,
                 showHelpAndExit("System library path not specified.");
             }
             break;
-
+        case OPT_MODEL_VERSION: 
+            if (WinOpt::optarg != NULL)
+            {
+                model_version = WinOpt::optarg;
+                if (model_version != VERSION_1_5 && model_version != VERSION_2_1)
+                {
+                    showHelpAndExit("Invalid model version specified. Use SD_1_5 or SD_2_1.");
+                }
+            }
+            break;
         default:
             std::cerr << "ERROR: Invalid argument passed: " << argv[WinOpt::optind - 1]
                       << "\nPlease check the Arguments section in the description below.\n";
@@ -231,7 +246,7 @@ bool processCommandLine(int argc,
         showHelpAndExit("Missing option: --backend\n");
     }
 
-    UiHelper *ui = new UiHelper(config_file_Path, backEndPath);
+    UiHelper *ui = new UiHelper(config_file_Path, backEndPath, model_version);
     bool ret = ui->init();
 
     socket_communication::Client client("127.0.0.1", 5001);
@@ -265,7 +280,7 @@ bool processCommandLine(int argc,
             guidance_scale = std::stof(inputs[0]);
             num_images = std::stoi(inputs[4]);
 
-            std::cout << "\nInputs are: \nPrompt : " << prompt << "\nSeed : " << seed << "\nStep : " << step << "\nGuidance Scale: " << guidance_scale << "\Number of Images: " << num_images << std::endl;
+            std::cout << "\nInputs are: \nPrompt : " << prompt << "\nSeed : " << seed << "\nStep : " << step << "\nGuidance Scale: " << guidance_scale << "\nNumber of Images: " << num_images << std::endl;
             break;
         }
     }
@@ -279,14 +294,9 @@ bool processCommandLine(int argc,
         std::cout << "[Server]: " << data << std::endl;
         if (data == "execute_next")
         {
-            ui->executeStableDiffusion(seed, step, guidance_scale, prompt);
-
-            //  // cv show
-            cv::Mat outputModelImage(512, 512, CV_8UC4);
-            std::memcpy(outputModelImage.data, (unsigned char *)ui->getInferenceReturn().m_ImageData, 512 * 512 * 4);
-            cv::cvtColor(outputModelImage, outputModelImage, cv::COLOR_BGRA2RGBA);
-
-            cv::imwrite("test.jpeg", outputModelImage);
+            bool ret = ui->executeStableDiffusion(seed, step, guidance_scale, prompt);
+            
+            cv::imwrite("test.jpeg", ui->outputModelImage);
 
             client.Send("execution_complete");
         }

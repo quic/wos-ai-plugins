@@ -1,13 +1,13 @@
 
 # Stable Diffusion plugin for GIMP <img src="docs\resources\gimp.png" alt="drawing" style="width:40px;"/> 
 
-The [Stable Diffusion](https://aihub.qualcomm.com/models/stable_diffusion_quantized) plugin for GIMP 2.10 allows users to generate images from text using stable diffusion 1.5. This plugin leverages Qualcomm NPU for faster inference time, providing efficient and high-quality image generation capabilities within the GIMP environment.
+The [Stable Diffusion](https://aihub.qualcomm.com/models/stable_diffusion_quantized) plugin for GIMP 2.99 allows users to generate images from text using stable diffusion 1.5. This plugin leverages Qualcomm NPU for faster inference time, providing efficient and high-quality image generation capabilities within the GIMP environment.
 
 ![sd1_5](docs/resources/gimp_sd_1_5.gif)
 
 ## Usage
 
-1. Open GIMP 2.10
+1. Open GIMP 2.99
 2. Create a new layer by clicking on `File` -> `New...` (Ctrl + N)
 
 3. Create a new blank layer.<br>

@@ -4,14 +4,14 @@
 Install vc runtime on WOS from https://aka.ms/vs/17/release/vc_redist.arm64.exe
 
 ## 2. Install GIMP
-Install GIMP 2.10 from https://download.gimp.org/gimp/v2.10/windows/gimp-2.10.36-setup-1.exe
+Install GIMP 2.99 from https://download.gimp.org/gimp/v2.99/windows/gimp-2.99.18-setup.exe
 
-This plugin is tested with GIMP 2.10.36.
+This plugin is tested with GIMP 2.99.18.
 
 ## 3. Install plugin
 
-Take the latest plugin release zip from the [releases page](https://github.com/quic/wos-ai-plugins/releases).
-Unzip and run the `install_plugin.zip` <br>
+Take the latest plugin release zip from the [releases page](https://github.com/quic/wos-ai-plugins/releases/tag/v1.3-gimp).
+Unzip and run the `install_plugin.bat` <br>
 
 <img src="../docs/resources/plugin_folder.png" alt="drawing" style="width:400px;"/>
 <br>

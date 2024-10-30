@@ -7,7 +7,7 @@ function Prepare-Plugin-Release {
     cp "$current_dir/resources/*" "$current_dir/build/plugin-release/sd-snapdragon/"
     cp "$current_dir/src/tokenizer/target/aarch64-pc-windows-msvc/release/tokenizer.dll" `
         "$current_dir/build/plugin-release/sd-snapdragon/"
-    cp "$current_dir/scripts/install_plugin.ps1" "$current_dir/build/plugin-release/"
+    cp "$current_dir/scripts/install_plugin.bat" "$current_dir/build/plugin-release/"
 }
 
 function Build-Tokenizer {
@@ -17,13 +17,13 @@ function Build-Tokenizer {
 }
 
 function Download-QNN-SDK {
-    If (-not (Test-Path "$current_dir/build/qairt/2.22.0.240425")) {
+    If (-not (Test-Path "$sdk_root_path")) {
         Invoke-WebRequest "$qnn_sdk_url" -OutFile "$current_dir/build/qnn_sdk.zip"
         Expand-Archive "$current_dir/build/qnn_sdk.zip" -DestinationPath "$current_dir/build/"
+        Move-Item -Path "$current_dir/build/qairt/2.24.0.240626" -Destination "$sdk_root_path"
     }
-    $qnn_sdk_root = "$current_dir\build\qairt\2.22.0.240425"
-    $env:QNN_SDK_ROOT = "$qnn_sdk_root"
-    write-output "QNN SDK root : " $qnn_sdk_root
+    $env:QNN_SDK_ROOT = "$sdk_root_path"
+    write-output "QNN SDK root : " $sdk_root_path
 }
 
 function Run-vcpkg {
@@ -45,8 +45,9 @@ function Build-Stable-Diffusion {
 
 try {
     $vcpkg_url = "https://github.com/microsoft/vcpkg"
-    $ai_hub_base_url = "https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-apps"
-    $qnn_sdk_url = "https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.22.0.240425.zip"
+    $qnn_sdk_url = "https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.24.0.240626.zip"
+    $sdk_qairt_path = "C:/Qualcomm/AIStack/QAIRT"
+    $sdk_root_path = "$sdk_qairt_path/2.24.0.240626"
     $ErrorActionPreference = "Stop"
     $initial_dir = (Get-Item .).FullName
     $current_dir = $PSScriptRoot

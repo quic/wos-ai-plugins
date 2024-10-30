@@ -48,7 +48,7 @@ public:
     int32_t Init (std::string configFilePath, std::string nativeLibPath,
                   int32_t inputWidth, int32_t inputHeight, float inputChannel,
                   int32_t outputWidth, int32_t outputHeight, float outputChannel,
-                  bool debugModeRequested, std::string runtimeNameOrFile
+                  bool debugModeRequested, std::string runtimeNameOrFile, std::string model_version
                  );
     bool PreProcessInput(void* image,
                          uint32_t imageSize,

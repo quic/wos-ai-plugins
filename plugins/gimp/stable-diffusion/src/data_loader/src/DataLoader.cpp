@@ -2,7 +2,12 @@
 // Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause
 // ---------------------------------------------------------------------
-
+#ifndef TS_EMBEDDING_ELEMENT_COUNT
+#define TS_EMBEDDING_ELEMENT_COUNT (1 * 1280)
+#endif
+#ifndef LATENT_ELEMENT_COUNT
+#define LATENT_ELEMENT_COUNT (1 * 64 * 64 * 4)
+#endif
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -12,7 +17,7 @@
 
 #include "Helpers.hpp"
 #include "DataLoader.h"
-
+#include "UiHelper.h"
 #ifdef WIN32
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
@@ -25,11 +30,9 @@
 }} while(0)
 
 // tensor spec
-#define TS_EMBEDDING_ELEMENT_COUNT ( 1 * 1280)
-#define CONST_TEXT_EMBEDDING_COUNT ( 1 * 77 * 768)
+#define CONST_TEXT_EMBEDDING_COUNT_SD_1_5 (1 * 77 * 768)
+#define CONST_TEXT_EMBEDDING_COUNT_SD_2_1 (1 * 77 * 1024)
 // the target order is nhwc
-#define LATENT_ELEMENT_COUNT ( 1*64*64*4)
-
 #define LATENT_BIN_FILE_EXT ".rand"
 #define TIME_STEP_EMBEDDING_BIN_FILE_EXT ".ts"
 #define CONST_TEXT_EMBEDDING_BIN_FILE_EXT ".cte"
@@ -328,8 +331,14 @@ DataLoader::~DataLoader()
 }
 
 
-bool DataLoader::load(char* file_name)
+bool DataLoader::load(char* file_name, std::string model_version)
 {
+    int embedding_count=0;
+    if (model_version == VERSION_2_1)
+        embedding_count = CONST_TEXT_EMBEDDING_COUNT_SD_2_1;
+    else
+        embedding_count = CONST_TEXT_EMBEDDING_COUNT_SD_1_5;
+ 
     loaded_ = false;
     const char* default_tar_file_name = DEFAULT_TAR_FILE_PATH;
 
@@ -350,7 +359,7 @@ bool DataLoader::load(char* file_name)
     ts_embedding_parser_ptr_ = std::move(temp2);
     tar_loader.register_parser(TIME_STEP_EMBEDDING_BIN_FILE_EXT, ts_embedding_parser_ptr_.get());
 
-    std::unique_ptr<FileParser> temp3(new TensorParser<float32_t>("const text embedding", CONST_TEXT_EMBEDDING_COUNT));
+    std::unique_ptr<FileParser> temp3(new TensorParser<float32_t>("const text embedding", embedding_count));
     const_text_embedding_parser_ptr_ = std::move(temp3);
     tar_loader.register_parser(CONST_TEXT_EMBEDDING_BIN_FILE_EXT, const_text_embedding_parser_ptr_.get());
 

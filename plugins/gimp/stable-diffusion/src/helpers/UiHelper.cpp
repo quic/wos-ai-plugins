@@ -9,12 +9,13 @@
 #include "UiHelper.h"
 
 
-UiHelper::UiHelper(std::string config_path, std::string backend) {
+UiHelper::UiHelper(std::string config_path, std::string backend, std::string version) {
     outputModelImage = cv::Mat(512, 512, CV_8UC4);
     step_number = 0;
     imageUpdateStatus = false;
     config_file_path = config_path;
     backend_path = backend;
+    model_version = version;
     std::ifstream isFilePath(config_file_path);
     if (!isFilePath) {
         std::cerr << "Config file is not a valid one. Input: " << config_file_path << std::endl;
@@ -44,11 +45,23 @@ bool UiHelper::init() {
         printf("LoadLibraries failure");
         return false;
     }*/
-
+    int height=0, width=0;
+    double bitWidth=0.0;
+    if (model_version == VERSION_2_1) {
+        height = 1024;
+        width = 77;
+        bitWidth = 1.0;
+    }
+    else {
+        height = 768;
+        width = 77;
+        bitWidth = 1.0;
+    }
+    
     if (0 != app->Init(config_file_path, Helpers::stripPath(config_file_path),
-        768, 77, 1.0,
+        height, width, bitWidth,
         512, 512, 4.0,
-        false, backend_path)) {
+        false, backend_path, model_version)) {
         printf("Initialization failure");
         return false;
     }
@@ -70,7 +83,7 @@ bool UiHelper::executeStableDiffusion(int seed, int step, float scale, std::stri
 
     std::string full_text(buffer);
     auto start = std::chrono::steady_clock::now();
-    
+
     if (true != app->PreProcessInput((void*)full_text.c_str(), full_text.length(), false, false)) {
         printf("PreProcessInput failure");
         return false;
@@ -78,8 +91,7 @@ bool UiHelper::executeStableDiffusion(int seed, int step, float scale, std::stri
 
     for (int mStepIdx = 0; mStepIdx < step; mStepIdx++) {
         
-        bool runVAE = (((mStepIdx + 1) % VAE_FREQ == 0) ||
-            ((mStepIdx + 1) == step) || ((mStepIdx + 1) == VAE_START_POINT)) && ((mStepIdx + 1) >= VAE_START_POINT);
+        bool runVAE = ((mStepIdx + 1) == step);
         printf("\n");
         if (true != app->RunInference(runVAE)) {
             printf("RunInference failure");
@@ -99,7 +111,14 @@ bool UiHelper::executeStableDiffusion(int seed, int step, float scale, std::stri
     }
     auto stop = std::chrono::steady_clock::now();
     Helpers::logProfile("Overall Inference time: ", start, stop);
+    auto now = std::chrono::system_clock::now();
+    auto time = std::chrono::system_clock::to_time_t(now);
+    auto tm = *std::localtime(&time);
 
+    auto epoch = now.time_since_epoch();
+    auto us = std::chrono::duration_cast<std::chrono::microseconds>(epoch).count() % 1000000;
+
+    std::cout << std::put_time(&tm, "%F %T.") << us << std::endl;
     return true;
 }
 

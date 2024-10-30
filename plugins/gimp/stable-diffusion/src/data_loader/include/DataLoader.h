@@ -18,7 +18,8 @@ using float32_t = float;
 
 // tensor spec
 #define TS_EMBEDDING_ELEMENT_COUNT (1 * 1280)
-#define CONST_TEXT_EMBEDDING_COUNT (1 * 77 * 768)
+#define CONST_TEXT_EMBEDDING_COUNT_SD_1_5 (1 * 77 * 768)
+#define CONST_TEXT_EMBEDDING_COUNT_SD_2_1 (1 * 77 * 1024)
 // the target order is nhwc
 #define LATENT_ELEMENT_COUNT (1 * 64 * 64 * 4)
 
@@ -48,7 +49,7 @@ public:
     // load data from files, this must be called first
     // load read data from a tar file defined by enviroment variable "SD_TAR_FILE"
 
-    bool load(char *file_name = nullptr);
+    bool load(char *file_name = nullptr, std::string model_version=NULL);
 
     // get a list of supported number of steps
 
@@ -106,7 +107,7 @@ public:
                                 const tensor_data_float32_t *&t10_latent_ptr);
 
     // get offline precomputed text embedding from input of [""] to text encoder
-    // [""] length is 1 due to batch-size-1 UNET inference, the size of the data is 1x77x768
+    // [""] length is 1 due to batch-size-1 UNET inference, the size of the data is 1x77x768 for v1.5 and 1x77x1024 for v2.1
     // returns:
     //  text_embedding_ptr, the caller should not do delete on it
 

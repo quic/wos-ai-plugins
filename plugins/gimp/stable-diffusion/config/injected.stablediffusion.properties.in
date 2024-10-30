@@ -17,11 +17,11 @@ app.title=Stable Diffusion
 model_context=m1:unet.serialized.bin,m2:vae_decoder.serialized.bin,m3:text_encoder.serialized.bin
 model_exec_order=m1,m2,m3
 
-input_tensor_name=m1:input_3
 output_tensor_name=m2:output_1
 
-latent_tensor_name=m1:input_1
-tsembed_tensor_name=m1:input_2
+latent_tensor_name=m1:latent
+tsembed_tensor_name=m1:time_emb
+input_tensor_name=m1:text_emb
 
 backend_extensions_lib=QnnHtpNetRunExtensions.dll
 backend_extensions_config=htp_backend_ext_config.json

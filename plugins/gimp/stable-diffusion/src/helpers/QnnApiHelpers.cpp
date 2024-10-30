@@ -242,7 +242,7 @@ int32_t QnnApiHelpers::Init(
     std::string configFilePath, std::string nativeLibPath,
     int32_t inputWidth, int32_t inputHeight, float inputChannel,
     int32_t outputWidth, int32_t outputHeight, float outputChannel,
-    bool debugModeRequested, std::string runtimeNameOrFile)
+    bool debugModeRequested, std::string runtimeNameOrFile, std::string model_version)
 {
 #if defined(DEBUG_DUMP) || defined(OUTPUT_DUMP) || defined(PRELOAD_DATA)
     // Setting up 0 as sample number
@@ -860,7 +860,7 @@ int32_t QnnApiHelpers::Init(
     // Now, since all buffers and quantization/dequantization info is available, lets call
     // OffTarget Data loader setup processes
     m_offTargetDataLoader = new DataLoader;
-    if (false == m_offTargetDataLoader->load((char *)m_dataLoaderInputTarfile.c_str()))
+    if (false == m_offTargetDataLoader->load((char *)m_dataLoaderInputTarfile.c_str(), model_version))
     {
         QNN_ERROR("Error in running load on m_offTargetDataLoader!");
         return -1;

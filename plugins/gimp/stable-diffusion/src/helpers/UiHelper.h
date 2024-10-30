@@ -9,7 +9,8 @@
 #include <filesystem>
 #include <memory>
 #include <string>
-
+#include <chrono>
+#include <ctime> 
 #include "GetOpt.hpp"
 #include "QnnApiHelpers.hpp"
 
@@ -22,19 +23,21 @@
 
 #define VAE_START_POINT 10 
 #define VAE_FREQ 5
-
+#define VERSION_2_1 "SD_2_1"
+#define VERSION_1_5 "SD_1_5"
 static void* sg_backendHandle{ nullptr };
 static void* sg_modelHandle{ nullptr };
 
 
 class UiHelper {
 public:
-	UiHelper(std::string config_path, std::string backend);
+	UiHelper(std::string config_path, std::string backend, std::string model_version);
 	~UiHelper();
 	bool init();
 	bool executeStableDiffusion(int seed, int step, float scale, std::string input_text);
 	void convertOutputImageToCV();
 	cv::Mat getOutputImageCV();
+	cv::Mat outputModelImage;	
 	Helpers::InferenceReturn getInferenceReturn();
 	int getStepNumber();
 	void reinit();
@@ -45,7 +48,7 @@ private:
 	int step_number;
 	std::string config_file_path;
 	std::string backend_path;
-	cv::Mat outputModelImage;
+	std::string model_version;
 	RuntimeApiHelpers* app = new QnnApiHelpers;
 	Helpers::InferenceReturn inferenceReturn;
 	bool imageUpdateStatus;

@@ -1193,42 +1193,42 @@ bool QnnApi::boostPerformance() {
     // Initialize the power config and select the voltage corner values for the performance setting.
     QnnHtpPerfInfrastructure_PowerConfig_t powerConfig;
     memset(&powerConfig, 0, sizeof(powerConfig));
-
+ 
     powerConfig.option                               = QNN_HTP_PERF_INFRASTRUCTURE_POWER_CONFIGOPTION_DCVS_V3;
     powerConfig.dcvsV3Config.dcvsEnable              = 1;
     powerConfig.dcvsV3Config.setDcvsEnable           = 1;
     powerConfig.dcvsV3Config.contextId               = m_powerConfigId;
-
+ 
     // refer QnnHtpPerfInfrastructure.h
     powerConfig.dcvsV3Config.powerMode               = QNN_HTP_PERF_INFRASTRUCTURE_POWERMODE_PERFORMANCE_MODE;
-    
+   
     // Set Sleep-Disable latency parameter
     powerConfig.dcvsV3Config.setSleepDisable         = 0;
     powerConfig.dcvsV3Config.sleepDisable            = 0;
-
+ 
     // Set Sleep latency parameter
     powerConfig.dcvsV3Config.setSleepLatency         = 0;
-    powerConfig.dcvsV3Config.sleepLatency            = 1000;        // range 40-2000 micro sec
-
+    powerConfig.dcvsV3Config.sleepLatency            = 40;        // range 40-2000 micro sec
+ 
     // Set Bus Clock Parameters (refer QnnHtpPerfInfrastructure.h)
     powerConfig.dcvsV3Config.setBusParams            = 1;
-    powerConfig.dcvsV3Config.busVoltageCornerMin     = DCVS_VOLTAGE_VCORNER_TURBO_PLUS;
-    powerConfig.dcvsV3Config.busVoltageCornerTarget  = DCVS_VOLTAGE_VCORNER_TURBO_PLUS;
-    powerConfig.dcvsV3Config.busVoltageCornerMax     = DCVS_VOLTAGE_VCORNER_TURBO_PLUS;
-
+    powerConfig.dcvsV3Config.busVoltageCornerMin     = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    powerConfig.dcvsV3Config.busVoltageCornerTarget  = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    powerConfig.dcvsV3Config.busVoltageCornerMax     = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+ 
     // set Core Clock Parameters (refer QnnHtpPerfInfrastructure.h)
     powerConfig.dcvsV3Config.setCoreParams           = 1;
-    powerConfig.dcvsV3Config.coreVoltageCornerMin    = DCVS_VOLTAGE_VCORNER_TURBO_PLUS;
-    powerConfig.dcvsV3Config.coreVoltageCornerTarget = DCVS_VOLTAGE_VCORNER_TURBO_PLUS;
-    powerConfig.dcvsV3Config.coreVoltageCornerMax    = DCVS_VOLTAGE_VCORNER_TURBO_PLUS;
-
+    powerConfig.dcvsV3Config.coreVoltageCornerMin    = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    powerConfig.dcvsV3Config.coreVoltageCornerTarget = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+    powerConfig.dcvsV3Config.coreVoltageCornerMax    = DCVS_VOLTAGE_VCORNER_MAX_VOLTAGE_CORNER;
+ 
     // Set power config with different performance parameters
     const QnnHtpPerfInfrastructure_PowerConfig_t *powerConfigs[] = {&powerConfig, NULL};
     if (QNN_SUCCESS != m_perfInfra.setPowerConfig(m_powerConfigId, powerConfigs)) {
         QNN_ERROR("Failure in setPowerConfig() from boostPerformance");
         return false;
     }
-
+ 
     return true;
 }
 
