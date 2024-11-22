@@ -19,9 +19,9 @@ OUTPUTS_DIR=os.path.join(PLUGIN_DIR, "Outputs")
 LOGS_DIR=os.path.join(PLUGIN_DIR, "logs")
 LOG_FILE=os.path.join(LOGS_DIR, "model_log.txt")
 
-QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.24.0.240626.zip"
+QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.22.0.240425.zip"
 
-QAIRT_VERSION = "2.24.0.240626"
+QAIRT_VERSION = "2.22.0.240425"
 DSP_ARCH = "73"  # For X-Elite device.
 
 QNN_LIBS_DIR = os.path.join(PLUGIN_DIR, "qnn_assets", "qnn_libs")

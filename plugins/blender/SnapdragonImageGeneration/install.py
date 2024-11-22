@@ -94,7 +94,7 @@ def setup_qairt_env():
     ]
     hexagon_libs = [
         "libQnnHtpV{}Skel.so".format(consts.DSP_ARCH),
-        # "libqnnhtpv73.cat",
+        "libqnnhtpv73.cat",
     ]
     for lib in libs:
         if not os.path.isfile(os.path.join(consts.QNN_LIBS_DIR, lib)):
