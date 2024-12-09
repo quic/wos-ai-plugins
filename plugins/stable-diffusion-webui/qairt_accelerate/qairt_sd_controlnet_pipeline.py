@@ -244,7 +244,10 @@ class QnnControlNetPipeline(QPipeline):
         model_controlnet = "controlnet"
 
         model_path = get_model_path(model_name=self.model_name)
-        if not os.path.exists(model_path):
+        if (not os.path.exists(model_path) or not os.path.exists(os.path.join(model_path, "TextEncoder_Quantized.bin"))
+                or not os.path.exists(os.path.join(model_path, "ControlNet_Quantized.bin"))
+                or not os.path.exists(os.path.join(model_path, "UNet_Quantized.bin"))
+                or not os.path.exists(os.path.join(model_path, "VAEDecoder_Quantized.bin"))):
             download_qualcomm_models_hf(
                 model_path,
                 consts.CONTROLNET_1_0_SD_1_5_CANNY_REPO_ID,

@@ -118,7 +118,9 @@ class Script(scripts.Script):
             sd_input.set_upscaler_model_name(p.hr_upscaler)
             sd_input.set_high_res(p.enable_hr)
 
-        print(f"self.pipeline : {self.pipeline_cache.pipeline} self.pipeline.model_name : {self.pipeline_cache.pipeline.model_name} qnn_model_name {qnn_model_name}")
+        
+        if self.pipeline_cache.pipeline and self.pipeline_cache.pipeline.model_name: 
+            print(f"self.pipeline : {self.pipeline_cache.pipeline} self.pipeline.model_name : {self.pipeline_cache.pipeline.model_name} qnn_model_name {qnn_model_name}")
         self.pipeline_cache.reload_pipeline(qnn_model_name)
         self.pipeline_cache.reload_upscaler_pipeline(sd_input.upscaler_model_name)
 

@@ -21,7 +21,9 @@ def convert_and_download_models():
     if not os.path.isfile(consts.TIMESTEP_EMBEDDING_2_1_MODEL_PATH):
         model = qai_hub.get_model(consts.TIMESTEP_EMBEDDING_2_1_MODEL_ID)
         model.download(filename=consts.TIMESTEP_EMBEDDING_2_1_MODEL_PATH)
-    if not os.path.isfile(consts.ESRGAN_X4_MODEL_PATH):
+    if (not os.path.isfile(consts.ESRGAN_X4_MODEL_PATH)
+        or not (os.path.isfile(consts.ESRGAN_X4_MODEL_CHECKSUM)
+        and open(consts.ESRGAN_X4_MODEL_CHECKSUM).read() == consts.ESRGAN_X4_MODEL_ID)):
         try:
             model = qai_hub.get_model(consts.ESRGAN_X4_MODEL_ID)
             model.download(filename=consts.ESRGAN_X4_MODEL_PATH)
@@ -33,6 +35,8 @@ def convert_and_download_models():
                 os.path.join(consts.CONVERTION_DIR,"esrgan.so"),
                 consts.ESRGAN_X4_MODEL_PATH,
             )
+        open(consts.ESRGAN_X4_MODEL_CHECKSUM, 'w').write(consts.ESRGAN_X4_MODEL_ID)
+        
 
 def sd2_1_unclip_download():
     os.makedirs(consts.SD2_1_UNCLIP_PATH, exist_ok=True)

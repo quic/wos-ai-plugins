@@ -16,11 +16,11 @@ import platform
 if (not platform.python_version().startswith("3.10.")) or (int(platform.python_version().split(".")[2])<6):
     raise Exception("Python version needs to be >=3.10.6 and <3.10.14")
 
-if not launch.is_installed("qai_appbuilder"):
-    launch.run_pip(
-        f"install {consts.QAI_APPBUILDER_WHEEL}",
-        "python QNN",
-    )
+# Always install QAI appbuilder for plugin upgradability.
+launch.run_pip(
+    f"install {consts.QAI_APPBUILDER_WHEEL}",
+    "Install python QNN",
+)
 if not launch.is_installed("diffusers"):
     launch.run_pip("install diffusers", "diffusers")
 if not launch.is_installed("onnx"):
@@ -65,15 +65,17 @@ def setup_qairt_env():
     ]
     hexagon_libs = [
         "libQnnHtpV{}Skel.so".format(consts.DSP_ARCH),
-        # "libqnnhtpv73.cat", TODO: Some issue with using this skel file, need to fix.
+        "libqnnhtpv73.cat",
     ]
     for lib in libs:
-        if not os.path.isfile(os.path.join(consts.QNN_LIBS_DIR, lib)):
-            shutil.copy(os.path.join(SDK_lib_dir, lib), consts.QNN_LIBS_DIR)
+        if os.path.isfile(os.path.join(consts.QNN_LIBS_DIR, lib)):
+           os.remove(os.path.join(consts.QNN_LIBS_DIR, lib)) 
+        shutil.copy(os.path.join(SDK_lib_dir, lib), consts.QNN_LIBS_DIR)
 
     for lib in hexagon_libs:
-        if not os.path.isfile(os.path.join(consts.QNN_LIBS_DIR, lib)):
-            shutil.copy(os.path.join(SDK_hexagon_dir, lib), consts.QNN_LIBS_DIR)
+        if os.path.isfile(os.path.join(consts.QNN_LIBS_DIR, lib)):
+            os.remove(os.path.join(consts.QNN_LIBS_DIR, lib))
+        shutil.copy(os.path.join(SDK_hexagon_dir, lib), consts.QNN_LIBS_DIR)
 
 
 def create_venv_for_qai_hub():

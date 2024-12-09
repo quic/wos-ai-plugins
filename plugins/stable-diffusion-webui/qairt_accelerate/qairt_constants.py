@@ -11,10 +11,10 @@ import os
 from modules.paths_internal import script_path, extensions_dir, models_path
 from pathlib import Path
 
-QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.24.0.240626.zip"
-QAI_APPBUILDER_WHEEL="https://github.com/quic/ai-engine-direct-helper/releases/download/v2.24.0/qai_appbuilder-2.24.0-cp310-cp310-win_amd64.whl"
+QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.22.0.240425.zip"
+QAI_APPBUILDER_WHEEL="https://github.com/quic/ai-engine-direct-helper/releases/download/v2.23.1/qai_appbuilder-2.22.0-cp310-cp310-win_amd64.whl"
 
-QAIRT_VERSION = "2.24.0.240626"
+QAIRT_VERSION = "2.22.0.240425"
 DSP_ARCH = "73"  # For X-Elite device.
 EXTENSION_WS = os.path.join(extensions_dir, "qairt_accelerate")
 VENV_PYTHON_PATH = f"{EXTENSION_WS}\\..\\..\\venv\\Scripts\\python.exe"
@@ -46,7 +46,8 @@ HUB_ID="aac24f12d047e7f558d8effe4b2fdad0f5c2c341"
 QAI_HUB_CONFIG = os.path.join(Path.home(), ".qai_hub", "client.ini")
 QAI_HUB_CONFIG_BACKUP = os.path.join(Path.home(), ".qai_hub", "client.ini.bk")
 CONVERTION_DIR = os.path.join(EXTENSION_WS, "model_conversion")
-ESRGAN_X4_MODEL_ID="meq29lx7n"
+ESRGAN_X4_MODEL_ID="mq3e3v1km"
+ESRGAN_X4_MODEL_CHECKSUM=os.path.join(CONVERTION_DIR,".esrgan")
 ESRGAN_X4_MODEL_PATH=os.path.join(CONVERTION_DIR,"esrgan.bin")
 
 SD2_1_UNCLIP_PATH=os.path.abspath(
