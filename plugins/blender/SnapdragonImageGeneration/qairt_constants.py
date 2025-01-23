@@ -10,7 +10,12 @@
 import os
 import pathlib
 
+# Function to convert a given path to UNC path
+def to_unc_path(path):
+    return f"\\\\?\\{path}"
+
 PLUGIN_DIR=pathlib.Path(__file__).parent.resolve()
+LONG_PATH_PREFIX_PLUGIN_DIR=to_unc_path(PLUGIN_DIR)
 VENV_PATH=os.path.join(PLUGIN_DIR, "venv")
 VENV_PYTHON=os.path.join(VENV_PATH, "Scripts", "python.exe")
 
@@ -25,7 +30,7 @@ QAIRT_VERSION = "2.22.0.240425"
 DSP_ARCH = "73"  # For X-Elite device.
 
 QNN_LIBS_DIR = os.path.join(PLUGIN_DIR, "qnn_assets", "qnn_libs")
-SDK_SAVE_PATH= os.path.join(PLUGIN_DIR, f"{QAIRT_VERSION}.zip")
+SDK_SAVE_PATH= os.path.join(LONG_PATH_PREFIX_PLUGIN_DIR, f"{QAIRT_VERSION}.zip")
 QAIRT_DIR=f"C:\\Qualcomm\\AIStack\\QAIRT"
 QNN_SDK_ROOT=f"C:\\Qualcomm\\AIStack\\QAIRT\\{QAIRT_VERSION}"
 

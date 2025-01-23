@@ -69,7 +69,7 @@ def download_qairt_sdk():
         print(f"QAIRT SDK downloaded.")
 
         with zipfile.ZipFile(consts.SDK_SAVE_PATH, "r") as zip_ref:
-            zip_ref.extractall(consts.PLUGIN_DIR)
+            zip_ref.extractall(consts.LONG_PATH_PREFIX_PLUGIN_DIR)
         shutil.move(
             os.path.join(consts.PLUGIN_DIR, "qairt", consts.QAIRT_VERSION),
             os.path.join(consts.QNN_SDK_ROOT, ".."),
