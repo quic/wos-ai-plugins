@@ -17,7 +17,7 @@ Current supported models:
 Additionally, connection status shown on the VSCode Status Bar.
 To check the connection manually, use the `Check Connection` button located on the side panel.
 
-![vscode](plugins/vscode/qairt-code-gen/media/vscode.gif)
+![vscode](https://github.com/quic/wos-ai-plugins/blob/main/plugins/vscode/qairt-code-gen/media/vscode.gif?raw=true)
 
 ## How to Install Extension
 
@@ -83,7 +83,7 @@ llama-v3p1
   |_  llama_v3_1_8b_chat_quantized_part_5_of_5.bin
 ```
 
-![model_folder](plugins/vscode/qairt-code-gen/media/model_folder.png)
+![model_folder](https://github.com/quic/wos-ai-plugins/blob/main/plugins/vscode/qairt-code-gen/media/model_folder.png?raw=true)
 
 ## Build Extension
 
