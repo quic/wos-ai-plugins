@@ -1,0 +1,10 @@
+{
+  "devices": [
+    {
+      "cores":[{
+        "perf_profile": "burst",
+        "rpc_control_latency": 100
+      }]
+    }
+  ]
+}

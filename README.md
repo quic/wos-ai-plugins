@@ -11,6 +11,9 @@ Our AI plugins offer the following key features:
 
 ## List of Plugins
 
+### <img src="plugins\vscode\qairt-code-gen\media\vscode-logo.png" alt="drawing" style="width:25px;border-radius: 10%;"/> VSCode Code gen Extension
+- [Overview and Installation](plugins/vscode/qairt-code-gen/README.md)
+
 ### <img src="plugins\gimp\stable-diffusion\docs\resources\gimp.png" alt="drawing" style="width:30px;"/> Stable Diffusion plugin for GIMP
 - [Overview and usage](plugins/gimp/stable-diffusion/README.md)
 - [Quick Installation](plugins/gimp/stable-diffusion/docs/install.md)
