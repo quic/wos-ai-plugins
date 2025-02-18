@@ -13,6 +13,9 @@ Our AI plugins offer the following key features:
 
 ### <img src="plugins\vscode\qairt-code-gen\media\vscode-logo.png" alt="drawing" style="width:25px;border-radius: 10%;"/> VSCode Code gen Extension
 - [Overview and Installation](plugins/vscode/qairt-code-gen/README.md)
+- To explore more about the VS Code extension, including its functionality, integration of the GENIE SDK in the backend and the process of adding new model support, 
+please check out [VSCode Extension for On‐Device Code Assistance ‐ Model Integration Guide](https://github.com/quic/wos-ai-plugins/wiki/VSCode-Extension-for-On%E2%80%90Device-Code-Assistance-%E2%80%90-Model-Integration-Guide).
+
 
 ### <img src="plugins\gimp\stable-diffusion\docs\resources\gimp.png" alt="drawing" style="width:30px;"/> Stable Diffusion plugin for GIMP
 - [Overview and usage](plugins/gimp/stable-diffusion/README.md)
