@@ -13,18 +13,17 @@ sig
 
 .idea/
 *.iml
-
+*.vsix
 **/assistant-cache
 **/assistant-binaries
 venv
 .venv
 /server/venv/
 /server/.venv/
-/server/build*
+/server/build_c
 **/build
 /server/QualcommCodExtServer.egg-info/
 /server/src/QualcommCodExtServer.egg-info/
 /server/.ruff_cache/
-/server/build*
 **/*.dll
 !media/*.png
