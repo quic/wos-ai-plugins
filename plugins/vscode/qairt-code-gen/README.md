@@ -66,14 +66,14 @@ genie_bundle
 
 ### Step 2: Install Extension
 
-Download ```qairt-code-completion-1.5.2.vsix``` from the [latest release](https://github.com/quic/wos-ai-plugins/releases/tag/v1.5.2-vscode).
+Download ```qairt-code-completion-1.5.3.vsix``` from the [latest release](https://github.com/quic/wos-ai-plugins/releases/tag/v1.5.3-vscode).
 
 Install the extension by opening VSCode and navigate to ```"Extensions" (in left-side menu)``` > ```Click on "..." (3 dots) at the top``` > ```Install from VSIX...``` > ```select qairt-code-completion-x.y.z.vsix file```.
 
 ### Step 3: Copy QNN model files
 
 Copy the model files which were generated in step ```#1``` to the qairt-code-completion extension folder.
-Copy all 5 Llama 3.1 8b files to C:\Users\USER\.vscode\extensions\quic.qairt-code-completion-1.5.2\out\server\models\llama-v3p1 folder as below.
+Copy all 5 Llama 3.1 8b files to C:\Users\USER\.vscode\extensions\quic.qairt-code-completion-1.5.3\out\server\models\llama-v3p1 folder as below.
 ```
 llama-v3p1
   |_  llama_v3_1_8b_chat_quantized_part_1_of_5.bin
@@ -100,9 +100,9 @@ Install Node.js from https://nodejs.org/en/download
 
 Create an QAIRT Code-Gen VSCode extension
 ```
-./build.ps1 -qnn_sdk_root "C:\Qualcomm\AIStack\QAIRT\2.28.2.241116"
+./build.ps1 -qnn_sdk_root "C:\Qualcomm\AIStack\QAIRT\2.31.0.250130"
 ```
 
-You will find qairt-code-completion-1.5.2.vsix extension file in this project directory, which can be installed in VSCode.
+You will find qairt-code-completion-1.5.3.vsix extension file in this project directory, which can be installed in VSCode.
 
 

@@ -1,7 +1,7 @@
 {
   "publisher": "QUIC",
   "name": "qairt-code-completion",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "displayName": "QAIRT Code Completion",
   "description": "VSCode extension for AI NPU Code Assistant with QAIRT",
   "icon": "media/logo.png",
