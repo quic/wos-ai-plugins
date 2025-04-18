@@ -27,6 +27,15 @@ please check out [VSCode Extension for On‐Device Code Assistance ‐ Model Int
 ### <img src="plugins\blender\SnapdragonImageGeneration\docs\resources\main_icon.jpg" alt="drawing" style="width:30px;border-radius: 50%;"/> Blender ControlNet Plugin
 - [Overview and Installation](plugins/blender/SnapdragonImageGeneration/README.md)
 
-##  License Information
+
+## Contribution and Support
+
+Check out [Contribution Guidelines](./CONTRIBUTING.md) for more details. We welcome contributions of all kinds!
+
+You can ask questions and get support on:
+
+* [GitHub Issues](https://github.com/quic/wos-ai-plugins/issues)
+
+## License Information
 
 This project is licensed under the [BSD-3-Clause License](https://spdx.org/licenses/BSD-3-Clause.html). For the full license text, please refer to the [LICENSE](LICENSE) file in this repository.
