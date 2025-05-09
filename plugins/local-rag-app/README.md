@@ -30,7 +30,7 @@ and place onnxruntime at `C:\Users\<user>\AppData\Local\ort.pyke.io\dfbin\aarch6
 
 
 ## How to start the RAG API server
-1. Download the binary from the releases page.
+1. Get the BGE large QNN context binary
 2. Run the binary with the following command:
     For NPU:
     ```powershell
