@@ -14,7 +14,7 @@ Alo set "C:\Program Files\LLVM\bin" path to PATH
 ```
 or build using below script
 ```
-./build_plugin.ps1
+./build_plugin.ps1 -qnn_sdk_root "C:\Qualcomm\AIStack\QAIRT\2.31.0.250130"
 ```
 
 ## Fixing build issues

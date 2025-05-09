@@ -1,3 +1,10 @@
+/*
+**************************************************************************************************
+* Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+* SPDX-License-Identifier: BSD-3-Clause-Clear
+**************************************************************************************************
+*/
+
 use libloading::{Library, Symbol};
 use std::ffi::c_void;
 

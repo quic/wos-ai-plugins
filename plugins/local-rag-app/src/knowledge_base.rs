@@ -1,3 +1,10 @@
+/*
+**************************************************************************************************
+* Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+* SPDX-License-Identifier: BSD-3-Clause-Clear
+**************************************************************************************************
+*/
+
 use crate::database::sql_database::{create_sqlite_db, sql_get_all_doc_names, sql_search_by_id};
 use crate::database::vectordb::{create_index, load_index, save_index};
 use crate::documents::document::{get_file, get_file_list, get_file_text, get_file_text_with_pages, Document};
@@ -28,6 +35,7 @@ pub struct Matches {
 pub struct RagDb {
     path: PathBuf,
     model_name: String,
+    config: Option<String>,
     device: String,
     embedding_npu_model: Option<EmbeddingNpuModel>,
     chunk_size: usize,
@@ -220,7 +228,7 @@ impl RagDb {
 }
 
 pub trait Util {
-    fn new(path: PathBuf, model_path: Option<String>, device: Option<String>, chunk_size: usize) -> Self;
+    fn new(path: PathBuf, model_path: Option<String>, config: Option<String>, device: Option<String>, chunk_size: usize) -> Self;
     fn load(path: PathBuf) -> Self;
     fn delete_all(&mut self);
 }
@@ -230,7 +238,7 @@ impl Util for RagDb {
     /// local is a bool value indicating whether to use a remote model, or a local model
     /// If local is true then model_path will contain the path to the directory where all the model files are located.
     /// If local is false then the model_path will be an empty string.
-    fn new(path: PathBuf, model_name: Option<String>, device: Option<String>, chunk_size: usize) -> RagDb {
+    fn new(path: PathBuf, model_name: Option<String>, config: Option<String>, device: Option<String>, chunk_size: usize) -> RagDb {
         let mut project_path: PathBuf = path.clone();
         project_path.push(".ragdb");
         match create_dir(&project_path) {
@@ -249,7 +257,7 @@ impl Util for RagDb {
         let index_usize: usize;
         if device.clone().unwrap_or(String::from("npu")) == "npu" {
             index_usize = 1024;
-            embeddingNpuModel = Some(EmbeddingNpuModel::new(model_name.clone().unwrap()));
+            embeddingNpuModel = Some(EmbeddingNpuModel::new(model_name.clone().unwrap(), config.clone()));
             embeddingNpuModel.clone().expect("Failed to load NPU model");
         } else {
             index_usize = 384;
@@ -271,6 +279,7 @@ impl Util for RagDb {
         let rag_db: RagDb = RagDb {
             path: path.to_path_buf(),
             model_name: model_name.expect("No model name provided"),
+            config: config.clone(),
             device: device.unwrap_or(String::from("npu")),
             embedding_npu_model: embeddingNpuModel.clone(),
             chunk_size,
@@ -299,6 +308,7 @@ impl Util for RagDb {
         let rag_db = RagDb::new(
             self.path.clone(),
             Some(self.model_name.clone()),
+            self.config.clone(),
             Some(self.device.clone()),
             self.chunk_size,
         );
@@ -355,7 +365,7 @@ mod test {
         std::fs::create_dir_all("./tmp/test1").unwrap();
 
         //create rag at path ./tmp/test
-        let rag_db = RagDb::new(std::path::PathBuf::from("./tmp/test1"), None, None, 256);
+        let rag_db = RagDb::new(std::path::PathBuf::from("./tmp/test1"), None, None, None, 256);
         assert_eq!(&rag_db.path.to_string_lossy().to_string(), "./tmp/test1");
         sleep(time::Duration::from_millis(1000));
     }

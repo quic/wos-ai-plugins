@@ -1,3 +1,10 @@
+/*
+**************************************************************************************************
+* Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+* SPDX-License-Identifier: BSD-3-Clause-Clear
+**************************************************************************************************
+*/
+
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -43,6 +50,8 @@ pub struct APIServerCommand {
     project_path: String,
     #[arg(short = 'm', long = "model-name")]
     model_name: Option<String>,
+    #[arg(short = 'c', long = "config")]
+    config: Option<String>,
     #[arg(short = 'd', long = "device")]
     device: Option<String>,
     #[arg(long = "chunk-size")]
@@ -77,11 +86,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Some(model_name) => {
                 let current_dir_path: PathBuf = std::env::current_dir().unwrap();
                 let _ragdb_knowledge_base: RagDb =
-                    RagDb::new(current_dir_path, Some(model_name), None, 256);
+                    RagDb::new(current_dir_path, Some(model_name), None, None, 256);
             }
             None => {
                 let current_dir_path: PathBuf = std::env::current_dir().unwrap();
-                let _ragdb_knowledge_base: RagDb = RagDb::new(current_dir_path, None, None, 256);
+                let _ragdb_knowledge_base: RagDb = RagDb::new(current_dir_path, None, None, None, 256);
             }
         },
         EntityType::Create(project_command) => {
@@ -95,10 +104,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             match project_command.model_name {
                 Some(path) => {
-                    let _ragdb_knowledge_base = RagDb::new(current_dir_path, Some(path), None, 256);
+                    let _ragdb_knowledge_base = RagDb::new(current_dir_path, Some(path), None, None, 256);
                 }
                 None => {
-                    let _ragdb_knowledge_base = RagDb::new(current_dir_path, None, None, 256);
+                    let _ragdb_knowledge_base = RagDb::new(current_dir_path, None, None, None, 256);
                 }
             }
         }
@@ -123,6 +132,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 server_command.port,
                 server_command.project_path,
                 server_command.model_name,
+                server_command.config,
                 server_command.device,
                 server_command.chunk_size,
             )

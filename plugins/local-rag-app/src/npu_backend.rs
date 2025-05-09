@@ -1,3 +1,10 @@
+/*
+**************************************************************************************************
+* Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+* SPDX-License-Identifier: BSD-3-Clause-Clear
+**************************************************************************************************
+*/
+
 use std::sync::Mutex;
 use serde::{ Deserialize, Serialize };
 use std::path::PathBuf;
@@ -35,7 +42,7 @@ pub struct EmbeddingNpuModel {
 
 impl EmbeddingNpuModel {
 
-    pub fn new(model_name: String) -> EmbeddingNpuModel {
+    pub fn new(model_name: String, config: Option<String>) -> EmbeddingNpuModel {
         let vec = vec![String::from("BGELargeENV15NPU_Int8"), String::from("BGELargeENV15NPU_Fp16")];
         if !vec.contains(&model_name.to_string()) {
             panic!("Unsupported NPU model {}", model_name);
@@ -51,9 +58,18 @@ impl EmbeddingNpuModel {
 
         println!("Genie version: v{}.{}.{}", major_version, minor_version, patch_version);
         
-        let mut config_path = std::env::current_exe().ok().and_then(|p| p.parent().map(|p| p.to_path_buf())).unwrap();
-        let config_file = PathBuf::from(format!("{}.json", model_name.clone()));
-        config_path.push(&config_file);
+        let mut config_path;
+        match config {
+            Some(conf) => {
+                config_path = PathBuf::from(conf);
+            }
+            None => {
+                config_path = std::env::current_exe().ok().and_then(|p| p.parent().map(|p| p.to_path_buf())).unwrap();
+                let config_file = PathBuf::from(format!("{}.json", model_name.clone()));
+                config_path.push(&config_file);
+            }
+        }
+        
         println!("{}", config_path.clone().display());
 
         EmbeddingNpuModel::load_model(config_path.clone());

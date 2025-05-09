@@ -1,3 +1,10 @@
+/*
+**************************************************************************************************
+* Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+* SPDX-License-Identifier: BSD-3-Clause-Clear
+**************************************************************************************************
+*/
+
 use async_lock::RwLock;
 use std::{path::PathBuf, str::FromStr, sync::Arc};
 
@@ -20,12 +27,14 @@ pub type RagState = Arc<RwLock<RagDb>>;
 pub fn load_or_create_db(
     path: String,
     model_name: Option<String>,
+    config: Option<String>,
     device: Option<String>,
     chunk_size: usize,
 ) -> Result<RagState> {
     let state = Arc::new(RwLock::new(RagDb::new(
         PathBuf::from_str(&path)?,
         model_name,
+        config,
         device,
         chunk_size,
     )));
@@ -36,12 +45,13 @@ pub async fn start_api_server(
     port: u16,
     project_path: String,
     model_name: Option<String>,
+    config: Option<String>,
     device: Option<String>,
     chunk_size: usize,
 ) -> Result<()> {
     // initialize tracing
     println!("Starting API server");
-    let state = load_or_create_db(project_path, model_name, device, chunk_size)?;
+    let state = load_or_create_db(project_path, model_name, config, device, chunk_size)?;
 
     let cors_layer = CorsLayer::new()
         .allow_origin(Any)  // Open access to selected route
@@ -56,13 +66,13 @@ pub async fn start_api_server(
         .route("/search", post(handle_search))
         .layer(ServiceBuilder::new().layer(cors_layer))
         .with_state(state);
-
+        
+    println!("{}", format!("Listening at http://localhost:{port}..."));
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
         .await
         .unwrap();
     axum::serve(listener, app).await.unwrap();
 
-    println!("{}", format!("Listening at http://localhost:{port}..."));
     Ok(())
 }
 
