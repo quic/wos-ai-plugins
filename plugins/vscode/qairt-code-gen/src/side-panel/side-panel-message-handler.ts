@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { ISidePanelMessage, SidePanelMessageTypes } from '@shared/side-panel-message';
 import { extensionState } from '../state';
 import { Webview, commands } from 'vscode';

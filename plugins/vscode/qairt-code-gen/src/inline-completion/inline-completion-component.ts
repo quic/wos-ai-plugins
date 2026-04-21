@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { Disposable, ExtensionContext, commands, window, languages } from 'vscode';
 import { COMMANDS } from '../constants';
 import { IExtensionComponent } from '../extension-component.interface';

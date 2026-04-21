@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { ConfigurationTarget, ExtensionContext, commands } from 'vscode';
 import { COMMANDS, CONFIG_KEY, EXTENSION_PACKAGE, EXTENSION_DISPLAY_NAME } from '../constants';
 import { CustomConfiguration } from '../configuration';
