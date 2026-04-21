@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { ModelName } from '@shared/model';
 import { Select, SelectOptionProps } from '../../../shared/Select/Select';
 import { ServerStatus } from '@shared/server-state';

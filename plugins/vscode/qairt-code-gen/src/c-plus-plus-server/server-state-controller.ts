@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { EventEmitter } from 'node:events';
 import { ServerState, ServerStatus, ServerStartingStage, INITIAL_SERVER_STATE } from '@shared/server-state';
 import { Disposable } from 'vscode';

@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { ExtensionContext } from 'vscode';
 import { statusBarService } from './services/status-bar.service';
 import { extensionState } from './state';

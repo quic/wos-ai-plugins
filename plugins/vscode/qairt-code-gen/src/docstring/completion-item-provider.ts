@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { CompletionItemProvider, CompletionItem, TextDocument, Position, CompletionItemKind, Range } from 'vscode';
 import { validDocstringPrefix, docstringIsClosed } from './parse';
 import { extensionState } from '../state';

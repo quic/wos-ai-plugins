@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { InlineCompletionItem, Position, Range, TextDocument, window } from 'vscode';
 import { EXTENSION_DISPLAY_NAME } from '../constants';
 import { IGenerateRequest, backendService } from '../services/backend.service';

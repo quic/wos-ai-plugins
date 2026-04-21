@@ -3,6 +3,7 @@
 //  Copyright (c) 2019-2023 Qualcomm Technologies, Inc.
 //  All Rights Reserved.
 //  Confidential and Proprietary - Qualcomm Technologies, Inc.
+//  SPDX-License-Identifier: BSD-3-Clause
 //
 //==============================================================================
 

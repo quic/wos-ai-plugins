@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { ServerStartingStage } from '@shared/server-state';
 import { ReactElement } from 'react';
 import { VscodeIcon } from '../../../shared/VscodeIcon/VscodeIcon';
