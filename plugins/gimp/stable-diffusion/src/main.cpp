@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------
-// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause
 // ---------------------------------------------------------------------
 
@@ -312,8 +312,8 @@ int main(int argc, char **argv)
 {
     system("rmdir /s /q output");
 
-    freopen("output.txt", "w", stdout);
-    freopen("error.txt", "w", stderr);
+    /*freopen("output.txt", "w", stdout);
+    freopen("error.txt", "w", stderr);*/
 
     bool ret = processCommandLine(argc, argv);
 

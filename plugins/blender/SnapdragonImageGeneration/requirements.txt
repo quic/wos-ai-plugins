@@ -1,7 +1,8 @@
+certifi
 scipy
 diffusers==0.21.4
 Flask
-numpy
+numpy==1.24.0
 opencv-python
 pillow
 pybind11
@@ -11,7 +12,5 @@ torch==1.13.1
 torchvision==0.14.1
 transformers==4.41.2
 accelerate
-huggingface_hub
-https://github.com/quic/ai-engine-direct-helper/releases/download/v2.23.1/qai_appbuilder-2.22.0-cp310-cp310-win_amd64.whl
-qai-hub==0.13.0
-qai_hub_models[esrgan]==0.11.2
+huggingface_hub==0.25.0
+https://github.com/quic/ai-engine-direct-helper/releases/download/v2.38.0/qai_appbuilder-2.38.0-cp310-cp310-win_amd64.whl

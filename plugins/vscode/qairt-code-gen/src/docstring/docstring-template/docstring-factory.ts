@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { Context, render } from "mustache";
 import { DocstringParts } from "./docstring-parts";
 import { TemplateData } from "./template-data";

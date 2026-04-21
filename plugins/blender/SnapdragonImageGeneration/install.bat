@@ -1,3 +1,10 @@
+REM =============================================================================
+REM
+REM Copyright (c) 2026, Qualcomm Innovation Center, Inc. All rights reserved.
+REM
+REM SPDX-License-Identifier: BSD-3-Clause
+REM
+REM =============================================================================
 
 @echo off
 for /f "tokens=2 delims= " %%i in ('python --version') do set version=%%i

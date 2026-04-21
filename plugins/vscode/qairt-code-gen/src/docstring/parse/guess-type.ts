@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 /* eslint-disable no-useless-escape */
 export function guessType(parameter: string): string | undefined {
   parameter = parameter.trim();

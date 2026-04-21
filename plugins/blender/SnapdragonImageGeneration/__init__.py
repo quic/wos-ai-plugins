@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2026, Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -80,9 +80,14 @@ class Model_OT_LoadPanel(bpy.types.Operator):
 
         def step_callback(log_line):
             total_models = 4
-            pattern = "Time\:\ model_initialize"
-            if log_line and re.search(pattern, log_line):
-                context.scene.progress += 1 / total_models
+            pattern = "Model initialization complete for ([0-9]+) model\(s\)\."
+            if log_line:
+                match = re.search(pattern, log_line)
+                if match:
+                    models_initialized = int(match.group(1))
+                    context.scene.progress = models_initialized / total_models
+                else :
+                    context.scene.progress += 0.03 / total_models
 
         log_file_path = LOG_FILE
         if process is None or not context.scene.is_model_loaded:
@@ -242,7 +247,11 @@ class RENDER_OT_ShowImage(bpy.types.Operator):
     )
 
     def execute(self, context):
-        image = bpy.data.images.load(filepath=self.image_path)
+        try:
+            image = bpy.data.images.load(filepath=self.image_path)
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to load image: {e}")
+            return {'CANCELLED'}
 
         is_image_loaded = False
         for window in bpy.data.window_managers["WinMan"].windows:
@@ -316,7 +325,6 @@ class IMAGE_PT_GeneratorPanel(bpy.types.Panel):
         layout.prop(generator, "seed")
         layout.prop(generator, "guidance_scale")
         layout.prop(generator, "steps")
-        layout.prop(generator, "output_resolution")
         layout.prop(conversion_settings, "output_img_path")
 
         col = layout.column(align=True)
@@ -361,7 +369,7 @@ class IMAGE_OT_GenerateOperator(bpy.types.Operator):
                 match = re.search(pattern, log_line)
                 if match:
                     total_steps = int(generate.steps)
-                    current_step = int(match.group(1)) + 0.5
+                    current_step = int(match.group(1)) + 1
                     context.scene.progress = current_step / total_steps
 
         if process is None or not context.scene.is_model_loaded:
@@ -378,7 +386,6 @@ class IMAGE_OT_GenerateOperator(bpy.types.Operator):
             seed = generate.seed
             steps = generate.steps
             cfg_scale = generate.guidance_scale
-            output_resolution = generate.output_resolution
 
             context.scene.is_model_running = True
 
@@ -398,7 +405,6 @@ class IMAGE_OT_GenerateOperator(bpy.types.Operator):
                 seed,
                 steps,
                 cfg_scale,
-                output_resolution,
                 step_callback,
                 on_done_callback=on_done_callback,
             )
@@ -414,13 +420,11 @@ class IMAGE_OT_GenerateOperator(bpy.types.Operator):
         seed,
         steps,
         cfg_scale,
-        output_resolution,
         step_callback,
         on_done_callback,
     ):
 
         log_file_path = LOG_FILE
-        is_high_resolution = 1 if output_resolution == "2048" else 0
         if seed == -1:
             seed = random.randrange(4294967294)
         data = {
@@ -430,8 +434,7 @@ class IMAGE_OT_GenerateOperator(bpy.types.Operator):
             "negative_prompt": negative_prompt,
             "seed": seed,
             "steps": steps,
-            "cfg_scale": cfg_scale,
-            "output_resolution": is_high_resolution,
+            "cfg_scale": cfg_scale
         }
 
         exec_command = {"action": "run_model", "params": data}
@@ -512,16 +515,6 @@ class ImageGeneratorProperties(bpy.types.PropertyGroup):
         default="20",
     )
 
-    output_resolution: EnumProperty(
-        name="Output Image Size",
-        description="Size of the output image",
-        items=[
-            ("512", "512x512", "Generate image at 512x512 resolution"),
-            ("2048", "2048x2048", "Generate image at 2048x2048 resolution"),
-        ],
-        default="512",
-    )
-
 
 def register():
     bpy.utils.register_class(CONVERSION_PT_ConversionPanel)
@@ -544,7 +537,7 @@ def register():
     )
 
     def step_progress_update(self, context):
-        if hasattr(context.area, "regions"):
+        if context.area and hasattr(context.area, "regions"):
             for region in context.area.regions:
                 if region.type == "UI":
                     region.tag_redraw()

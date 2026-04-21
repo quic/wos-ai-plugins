@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2026, Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -25,8 +25,6 @@ import traceback
 
 from qai_appbuilder import (
     QNNContext,
-    QNNContextProc,
-    QNNShareMemory,
     Runtime,
     LogLevel,
     ProfilingLevel,
@@ -47,8 +45,6 @@ tokenizer_max_length = 77  # Define Tokenizer output max length (must be 77)
 text_encoder = None
 unet = None
 vae_decoder = None
-realesrgan = None
-realesrgan_mem = None
 
 # Any user defined prompt
 user_prompt = ""
@@ -56,7 +52,6 @@ uncond_prompt = ""
 user_seed = np.int64(1)
 user_step = 20  # User defined step value, any integer value in {20, 30, 50}
 user_text_guidance = 9.0  # User define text guidance, any float value in [5.0, 15.0]
-user_high_resolution = False
 input_image_path = None
 output_image_path = None
 
@@ -70,15 +65,12 @@ def reset():
     global unet
     global vae_decoder
     global controlnet
-    global realesrgan
-    global realesrgan_mem
 
     global user_prompt
     global uncond_prompt
     global user_seed
     global user_step
     global user_text_guidance
-    global user_high_resolution
     global input_image_path
     global output_image_path
 
@@ -89,8 +81,6 @@ def reset():
     text_encoder = None
     unet = None
     vae_decoder = None
-    realesrgan = None
-    realesrgan_mem = None
 
     # Any user defined prompt
     user_prompt = ""
@@ -101,7 +91,6 @@ def reset():
         9.0  # User define text guidance, any float value in [5.0, 15.0]
     )
     input_image_path = None
-    user_high_resolution = True
     output_image_path = None
 
 
@@ -194,16 +183,6 @@ class VaeDecoder(QNNContext):
         return output_data
 
 
-class RealESRGan(QNNContextProc):
-    # @timer
-    def Inference(self, realesrgan_mem, input_data):
-        input_datas = [input_data]
-
-        output_data = super().Inference(realesrgan_mem, input_datas)[0]
-
-        return output_data
-
-
 class ControlNet(QNNContext):
     # @timer
     def Inference(self, input_data_1, input_data_2, input_data_3, input_data_4):
@@ -228,8 +207,6 @@ def model_initialize():
     global unet
     global vae_decoder
     global controlnet
-    global realesrgan
-    global realesrgan_mem
 
     result = True
 
@@ -237,43 +214,36 @@ def model_initialize():
     model_text_encoder = "text_encoder"
     model_unet = "model_unet"
     model_vae_decoder = "vae_decoder"
-    model_realesrgan = "realesrgan"
     model_controlnet = "controlnet"
 
-    # process names
-    model_realesrgan_proc = "~realesrgan"
-
-    # share memory names.
-    model_realesrgan_mem = model_realesrgan + "~memory"
 
     # models' path.
-    text_encoder_model = "{}\\{}_Quantized.bin".format(
-        consts.CONTROLNET_DIR, "TextEncoder"
+    text_encoder_model = "{}\\{}.bin".format(
+        consts.CONTROLNET_DIR, "text_encoder"
     )
-    unet_model = "{}\\{}_Quantized.bin".format(consts.CONTROLNET_DIR, "UNet")
-    vae_decoder_model = "{}\\{}_Quantized.bin".format(
-        consts.CONTROLNET_DIR, "VAEDecoder"
+    unet_model = "{}\\{}.bin".format(consts.CONTROLNET_DIR, "unet")
+    vae_decoder_model = "{}\\{}.bin".format(
+        consts.CONTROLNET_DIR, "vae"
     )
-    controlnet_model = "{}\\{}_Quantized.bin".format(
-        consts.CONTROLNET_DIR, "ControlNet"
+    controlnet_model = "{}\\{}.bin".format(
+        consts.CONTROLNET_DIR, "controlnet"
     )
-    realesrgan_model = consts.ESRGAN_X4_MODEL_PATH
-
-    # Instance for Unet
-    unet = Unet(model_unet, unet_model)
 
     # Instance for TextEncoder
     text_encoder = TextEncoder(model_text_encoder, text_encoder_model)
+    print(f"Model initialization complete for 1 model(s).")
 
     # Instance for VaeDecoder
     vae_decoder = VaeDecoder(model_vae_decoder, vae_decoder_model)
+    print(f"Model initialization complete for 2 model(s).")
 
     # Instance for ControlNet
     controlnet = ControlNet(model_controlnet, controlnet_model)
+    print(f"Model initialization complete for 3 model(s).")
 
-    # Instance for RealESRGan which inherited from the class QNNContextProc, the model will be loaded into a separate process.
-    realesrgan = RealESRGan(model_realesrgan, model_realesrgan_proc, realesrgan_model)
-    realesrgan_mem = QNNShareMemory(model_realesrgan_mem, 1024 * 1024 * 50)  # 50M
+    # Instance for Unet
+    unet = Unet(model_unet, unet_model)
+    print(f"Model initialization complete for 4 model(s).")
 
     # Initializing the Tokenizer
     tokenizer = CLIPTokenizer.from_pretrained(
@@ -311,8 +281,7 @@ def setup_parameters(
     un_prompt,
     seed,
     step,
-    text_guidance,
-    high_resolution,
+    text_guidance
 ):
 
     global user_prompt
@@ -320,7 +289,6 @@ def setup_parameters(
     global user_seed
     global user_step
     global user_text_guidance
-    global user_high_resolution
     global input_image_path
     global output_image_path
 
@@ -329,7 +297,6 @@ def setup_parameters(
     user_seed = seed
     user_step = step
     user_text_guidance = text_guidance
-    user_high_resolution = high_resolution
     input_image_path = input_img_path
     output_image_path = output_img_path
 
@@ -420,16 +387,13 @@ def model_execute(callback):
     image = load_image(input_image_path)
     canny_image = make_canny_image(image)
 
-    time_emb_path = os.path.join(consts.TIME_EMBEDDING_PATH, str(user_step))
-
     # Run the loop for user_step times
     for step in range(user_step):
         print(f"Step {step} Running...")
         sys.stdout.flush()
 
-        timestep = get_timestep(step)  # time_embedding = get_time_embedding(timestep)
-        file_path = os.path.join(time_emb_path, str(step) + ".raw")
-        time_embedding = np.fromfile(file_path, dtype=np.float32)
+        timestep = get_timestep(step)
+        time_embedding = np.array([[timestep]], dtype=np.float32)
 
         controlnet_out = controlnet.Inference(
             latent_in, time_embedding, user_text_embedding, canny_image
@@ -462,16 +426,8 @@ def model_execute(callback):
         callback(None)
         return False
     else:
-        image_size = 512
-
-        # Run RealESRGan
-        if user_high_resolution:
-            output_image = realesrgan.Inference(realesrgan_mem, [output_image])
-            image_size = 2048
-
         image_path = output_image_path
         output_image = np.clip(output_image * 255.0, 0.0, 255.0).astype(np.uint8)
-        output_image = output_image.reshape(image_size, image_size, -1)
         Image.fromarray(output_image, mode="RGB").save(image_path)
         callback(image_path)
         return True
@@ -482,14 +438,10 @@ def model_destroy():
     global text_encoder
     global unet
     global vae_decoder
-    global realesrgan
-    global realesrgan_mem
 
     del text_encoder
     del unet
     del vae_decoder
-    del realesrgan
-    del realesrgan_mem
 
 
 def SetQNNConfig():
@@ -532,14 +484,12 @@ def run_model(
     uncond_prompt,
     user_seed,
     user_step,
-    user_text_guidance,
-    user_high_resolution,
+    user_text_guidance
 ):
 
     user_seed = np.int64(int(user_seed))
     user_step = int(user_step)
     user_text_guidance = float(user_text_guidance)
-    user_high_resolution = bool(user_high_resolution)
 
     setup_parameters(
         input_img_path,
@@ -548,8 +498,7 @@ def run_model(
         uncond_prompt,
         user_seed,
         user_step,
-        user_text_guidance,
-        user_high_resolution,
+        user_text_guidance
     )
 
     is_generated = model_execute(modelExecuteCallback)
