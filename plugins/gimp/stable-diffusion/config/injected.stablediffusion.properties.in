@@ -17,7 +17,7 @@ app.title=Stable Diffusion
 model_context=m1:unet.serialized.bin,m2:vae_decoder.serialized.bin,m3:text_encoder.serialized.bin
 model_exec_order=m1,m2,m3
 
-output_tensor_name=m2:output_1
+output_tensor_name=m2:image
 
 latent_tensor_name=m1:latent
 tsembed_tensor_name=m1:time_emb

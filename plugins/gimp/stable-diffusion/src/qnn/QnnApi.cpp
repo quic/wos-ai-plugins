@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------
-// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause
 // ---------------------------------------------------------------------
 
@@ -598,12 +598,12 @@ bool QnnApi::createDevice()
             }
         }
     }
-    if (nullptr != m_backendExtensions && m_backendExtensions->interface1()) {
+    /*if (nullptr != m_backendExtensions && m_backendExtensions->interface1()) {
         if (!m_backendExtensions->interface1()->afterCreateDevice()) {
             QNN_ERROR("Extensions Failure in afterCreateDevice()");
             return false;
         }
-    }
+    }*/
 #endif
     return true;
 }

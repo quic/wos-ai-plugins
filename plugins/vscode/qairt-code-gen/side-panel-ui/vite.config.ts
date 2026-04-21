@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { defineConfig } from 'vite';
 import { fileURLToPath } from 'url';
 import react from '@vitejs/plugin-react';

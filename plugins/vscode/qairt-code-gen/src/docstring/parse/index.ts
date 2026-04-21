@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 export { docstringIsClosed } from "./docstring-is-closed";
 export { getBody } from "./get-body";
 export { getDefinition } from "./get-definition";

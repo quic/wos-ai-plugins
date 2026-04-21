@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2026, Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -11,8 +11,10 @@ import os
 import cv2
 import numpy as np
 import torch
+import install
 from transformers import CLIPTokenizer
 from modules import paths
+import common_utils as utils
 from qai_appbuilder import (
     QNNContext,
     Runtime,
@@ -221,7 +223,6 @@ class QnnControlNetPipeline(QPipeline):
         image = cv2.resize(image, (512, 512))
 
         image = cv2.Canny(image, low_threshold, high_threshold)
-        # cv2.imwrite(os.path.join(consts.OUTPUTS_DIR, "canny.png"), image)
         image = image[:, :, None]
         image = np.concatenate([image, image, image], axis=2)
 
@@ -244,29 +245,21 @@ class QnnControlNetPipeline(QPipeline):
         model_controlnet = "controlnet"
 
         model_path = get_model_path(model_name=self.model_name)
-        if (not os.path.exists(model_path) or not os.path.exists(os.path.join(model_path, "TextEncoder_Quantized.bin"))
-                or not os.path.exists(os.path.join(model_path, "ControlNet_Quantized.bin"))
-                or not os.path.exists(os.path.join(model_path, "UNet_Quantized.bin"))
-                or not os.path.exists(os.path.join(model_path, "VAEDecoder_Quantized.bin"))):
-            download_qualcomm_models_hf(
-                model_path,
-                consts.CONTROLNET_1_0_SD_1_5_CANNY_REPO_ID,
-                [
-                    "TextEncoder_Quantized.bin",
-                    "ControlNet_Quantized.bin",
-                    "UNet_Quantized.bin",
-                    "VAEDecoder_Quantized.bin",
-                ],
-                consts.CONTROLNET_1_0_SD_1_5_CANNY_REVISION,
-            )
+        model_binaries = [
+                "controlnet.serialized.bin",
+                "text_encoder.serialized.bin",
+                "unet.serialized.bin",
+                "vae_decoder.serialized.bin"
+        ]
+
         # Initializing the Tokenizer
         self.tokenizer = CLIPTokenizer.from_pretrained(
             "openai/clip-vit-base-patch32", cache_dir=consts.CACHE_DIR
         )
-        text_encoder_model = "{}\\TextEncoder_Quantized.bin".format(model_path)
-        unet_model = "{}\\UNet_Quantized.bin".format(model_path)
-        vae_decoder_model = "{}\\VAEDecoder_Quantized.bin".format(model_path)
-        controlnet_model = "{}\\ControlNet_Quantized.bin".format(model_path)
+        text_encoder_model = "{}\\{}".format(model_path, model_binaries[1])
+        unet_model = "{}\\{}".format(model_path, model_binaries[2])
+        vae_decoder_model = "{}\\{}".format(model_path, model_binaries[3])
+        controlnet_model = "{}\\{}".format(model_path, model_binaries[0])
         print(f"Loading models from {model_path}")
         # Instance for Unet
         self.unet = Unet(model_unet, unet_model)
@@ -292,8 +285,7 @@ class QnnControlNetPipeline(QPipeline):
     def model_execute(
         self,
         sd_input: StableDiffusionInput,
-        callback,
-        upscaler_pipeline: UpscalerPipeline,
+        callback
     ) -> Image:
         image = sd_input.input_image
         PerfProfile.SetPerfProfileGlobal(PerfProfile.BURST)
@@ -322,13 +314,8 @@ class QnnControlNetPipeline(QPipeline):
 
         # Run the loop for user_step times
         for step in range(sd_input.user_step):
-            # print(f"Step {step} Running...")
-
             time_step = self.get_timestep(step)
-            time_embedding = self.get_time_embedding(
-                time_step, self.unet_time_embeddings_1_5
-            )
-
+            time_embedding = np.array([[time_step]], dtype=np.float32)
             controlnet_out = self.controlnet.Inference(
                 latent_in, time_embedding, user_text_embedding, canny_image
             )
@@ -366,12 +353,6 @@ class QnnControlNetPipeline(QPipeline):
             callback(None)
         else:
             image_size = 512
-
-            # Run RealESRGan
-            if sd_input.is_high_resolution:
-                print(f"Upscaler used: {sd_input.upscaler_model_path}")
-                output_image = upscaler_pipeline.execute(output_image)
-                image_size = 2048
 
             output_image = np.clip(output_image * 255.0, 0.0, 255.0).astype(np.uint8)
             output_image = output_image.reshape(image_size, image_size, -1)

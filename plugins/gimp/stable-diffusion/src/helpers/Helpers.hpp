@@ -1,6 +1,6 @@
 /*
 **************************************************************************************************
-* Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+* Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
 * SPDX-License-Identifier: BSD-3-Clause-Clear
 **************************************************************************************************
 */
@@ -38,7 +38,7 @@
 
 // For recording error and debug info
 
-#ifdef DEBUG_ENABLE
+#if DEBUG_ENABLE
 #define DEMO_ERROR(fmt, ...) printf("INFERENCE_ERROR: "#fmt "\n", ##__VA_ARGS__)
 #define DEMO_WARN(fmt, ...) printf("INFERENCE_WARN: "#fmt "\n", ##__VA_ARGS__)
 #define DEMO_DEBUG(fmt, ...) printf("INFERENCE_DEBUG: "#fmt "\n", ##__VA_ARGS__)

@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------
-// Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause
 // ---------------------------------------------------------------------
 
@@ -233,6 +233,36 @@ bool copyTensorsInfo(const Qnn_Tensor_t *tensorsInfoSrc,
   return returnStatus;
 }
 
+bool copyGraphsInfoV3(const QnnSystemContext_GraphInfoV3_t* graphInfoSrc,
+    GraphInfo_t* graphInfoDst) {
+    graphInfoDst->graphName = nullptr;
+    if (graphInfoSrc->graphName) {
+        graphInfoDst->graphName =
+            strndup(graphInfoSrc->graphName, strlen(graphInfoSrc->graphName));
+    }
+    graphInfoDst->inputTensors = nullptr;
+    graphInfoDst->numInputTensors = 0;
+    if (graphInfoSrc->graphInputs) {
+        if (!copyTensorsInfo(
+            graphInfoSrc->graphInputs, graphInfoDst->inputTensors, graphInfoSrc->numGraphInputs)) {
+            return false;
+        }
+        graphInfoDst->numInputTensors = graphInfoSrc->numGraphInputs;
+    }
+    graphInfoDst->outputTensors = nullptr;
+    graphInfoDst->numOutputTensors = 0;
+    if (graphInfoSrc->graphOutputs) {
+        if (!copyTensorsInfo(graphInfoSrc->graphOutputs,
+            graphInfoDst->outputTensors,
+            graphInfoSrc->numGraphOutputs)) {
+            return false;
+        }
+        graphInfoDst->numOutputTensors = graphInfoSrc->numGraphOutputs;
+    }
+    return true;
+}
+
+
 bool copyGraphsInfoV1(const QnnSystemContext_GraphInfoV1_t *graphInfoSrc,
                       GraphInfo_t *graphInfoDst) {
   graphInfoDst->graphName = nullptr;
@@ -283,6 +313,9 @@ bool copyGraphsInfo(const QnnSystemContext_GraphInfo_t *graphsInput,
       QNN_DEBUG("Extracting graphsInfo for graph Idx: %d", (int)gIdx);
       if (graphsInput[gIdx].version == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_1) {
         copyGraphsInfoV1(&graphsInput[gIdx].graphInfoV1, &graphInfoArr[gIdx]);
+      }
+      else if (graphsInput[gIdx].version == QNN_SYSTEM_CONTEXT_GRAPH_INFO_VERSION_3) {
+          copyGraphsInfoV3(&graphsInput[gIdx].graphInfoV3, &graphInfoArr[gIdx]);
       }
       graphsInfo[gIdx] = graphInfoArr + gIdx;
     }
@@ -341,6 +374,18 @@ bool copyMetadataToGraphsInfo(const QnnSystemContext_BinaryInfo_t *binaryInfo,
       return true;
     }
 #endif
+  }
+  else if (binaryInfo->version == QNN_SYSTEM_CONTEXT_BINARY_INFO_VERSION_3) {
+      if (binaryInfo->contextBinaryInfoV3.graphs) {
+          if (!copyGraphsInfo(binaryInfo->contextBinaryInfoV3.graphs,
+              binaryInfo->contextBinaryInfoV3.numGraphs,
+              graphsInfo)) {
+              QNN_ERROR("Failed while copying graphs Info.");
+              return false;
+          }
+          graphsCount = binaryInfo->contextBinaryInfoV3.numGraphs;
+          return true;
+      }
   }
   QNN_ERROR("Unrecognized system context binary info version.");
   return false;

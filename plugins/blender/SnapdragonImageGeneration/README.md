@@ -8,28 +8,33 @@ Blender ControlNet plugin runs on Qualcomm X-Elite NPU using [Qualcomm AI Runtim
 
 ## Supported features
 
-* ControlNet model, 512x512 as input image, 512x512 or 2048x2048 as output image
+* ControlNet model, 512x512 as input image, 512x512 as output image
 * Sampling method: DPM++ 2M
-* Upscaling method: ESRGAN-x4
 
 ## Installation Instructions:
 
 ### Step 1: Install Dependencies
 Download and install [Python 3.10.6](https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe)
+Install "OpenCL™, OpenGL®, and Vulkan® Compatibility Pack" from Microsoft Store.
 
 > **_NOTE:_** The program is tested to work on Python `3.10.6`. Don't use other versions.
 
 ### Step 2: Download Blender Arm64
-Download Blender Arm64 4.3 Alpha version from [Daily build](https://builder.blender.org/download/daily/). The Stable version of Arm64 is expected to be releasing soon.
+Download Blender Arm64 4.5 version from [Download page](https://www.blender.org/download/).
 
 ### Step 3: Download Blender ControlNet Plugin
-Download `blender-controlnet-plugin-v1.0.zip` from the [latest release](https://github.com/quic/wos-ai-plugins/releases/tag/v1.0-blender).
-Unzip and place the `SnapdragonImageGeneration` folder under `C:\Users\<user>\AppData\Roaming\Blender Foundation\Blender\4.3\scripts\addons`
+Download `blender-controlnet-plugin-v2.0.zip` from the [latest release](https://github.com/quic/wos-ai-plugins/releases/tag/v1.2.1-blender). 
+Unzip and place the `SnapdragonImageGeneration` folder under `C:\Users\<user>\AppData\Roaming\Blender Foundation\Blender\4.5\scripts\addons`
 
-> **_NOTE:_** The path `C:\Users\<user>\AppData\Roaming\Blender Foundation\Blender\4.3` won't be created until the Blender application is opened at least once.
+> **_NOTE:_** The path `C:\Users\<user>\AppData\Roaming\Blender Foundation\Blender\4.5` won't be created until the Blender application is opened at least once.
 
 > **_NOTE:_** Create the `scripts\addons` folder if not already present.
 
+> **_NOTE:_** If you encounter an OS error related to the Windows path being too long during plugin installation, you can change the settings to enable long paths. To do this:
+
+1. Press **Win + R** on your keyboard, type **regedit**, and press **Enter** to open the Registry Editor.
+2. Navigate to **HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem**.
+3. Edit **LongPathsEnabled** and set it to **1**.
 
 ### Step 4: Install Plugin
 
@@ -39,7 +44,7 @@ Run below command to install the plugin. This installs QAIRT SDK and models requ
 ```
 
 ### Step 5: Enable Plugin
-Run Blender Arm64 4.3 and go to `Edit`->`Preferences`->`Add-ons` and search for `Snapdragon Image Generation` and enable it.
+Run Blender Arm64 4.5 and go to `Edit`->`Preferences`->`Add-ons` and search for `Snapdragon Image Generation` and enable it.
 <img src="docs/resources/enable-addon.png" alt="drawing" style="width:400px;"/>
 
 

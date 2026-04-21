@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
+
 import { ProfileName } from "./profile";
 
 enum ExamplePrompt {
@@ -19,7 +24,7 @@ def test_validate_email():
 `,
 
     DEBUG_RECURSION_CODE = `#Where is the bug in this code?
- 
+
 def fib(n):
     if n <= 0:
         return n
@@ -27,31 +32,31 @@ def fib(n):
         return fib(n-1) + fib(n-2)
 `,
 
-    DEBUG_LAMBDA_CODE = `This function should return a list of lambda functions that compute successive powers of their input, but it doesn’t work:
- 
+    DEBUG_LAMBDA_CODE = `This function should return a list of lambda functions that compute successive powers of their input, but it doesn't work:
+
 def power_funcs(max_pow):
     return [lambda x:x**k for k in range(1, max_pow+1)]
- 
+
 the function should be such that [h(2) for f in powers(3)] should give [2, 4, 8], but it currently gives [8,8,8]. What is happening here?
 `,
 
     TEST_CASE_UNIQUE_ELEMENTS = `Your task is to write 2 tests to check the correctness of a function that solves a programming problem.
 The tests must be between [TESTS] and [/TESTS] tags.
 You must write the comment "#Test case n:" on a separate line directly above each assert statement, where n represents the test case number, starting from 1 and increasing by one for each subsequent test case.
- 
+
 Problem: Write a Python function to get the unique elements of a list.
 `,
 
     OPTIMIZE_SORTING = `Can you optimize this code? Explain what you have optimized and why?
-arr = [5, 2, 8, 7, 1];     
-temp = 0;    
-     
-#Sort the array in ascending order    
-for i in range(0, len(arr)):    
-    for j in range(i+1, len(arr)):    
-        if(arr[i] > arr[j]):    
-            temp = arr[i];    
-            arr[i] = arr[j];    
+arr = [5, 2, 8, 7, 1];
+temp = 0;
+
+#Sort the array in ascending order
+for i in range(0, len(arr)):
+    for j in range(i+1, len(arr)):
+        if(arr[i] > arr[j]):
+            temp = arr[i];
+            arr[i] = arr[j];
             arr[j] = temp;
 `,
 

@@ -113,7 +113,7 @@ set_target_properties(QNN PROPERTIES
 add_executable (${APP} "src/main.cpp" ${SDLIB_SOURCES})
 
 target_include_directories(${APP} PRIVATE ${DIRENT_INCLUDE_DIRS} INCLUDE_DIRS)
-target_compile_definitions(${APP} PRIVATE DEBUG_ENABLE=1)
+target_compile_definitions(${APP} PRIVATE DEBUG_ENABLE=0)
 target_link_libraries(${APP} PRIVATE ${OpenCV_LIBS} dlfcn-win32::dl wsock32 ws2_32 flatbuffers::flatbuffers tokenizer.dll.lib)
 target_link_libraries (${APP} PUBLIC QNN)
 

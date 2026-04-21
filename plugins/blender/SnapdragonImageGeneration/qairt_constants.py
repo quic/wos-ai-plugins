@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2026, Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #
@@ -24,10 +24,10 @@ OUTPUTS_DIR=os.path.join(PLUGIN_DIR, "Outputs")
 LOGS_DIR=os.path.join(PLUGIN_DIR, "logs")
 LOG_FILE=os.path.join(LOGS_DIR, "model_log.txt")
 
-QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/qualcomm_neural_processing_sdk/v2.22.0.240425.zip"
+QNN_SDK_DOWNLOAD_URL="https://softwarecenter.qualcomm.com/api/download/software/sdks/Qualcomm_AI_Runtime_Community/All/2.44.0.260225/v2.44.0.260225.zip"
 
-QAIRT_VERSION = "2.22.0.240425"
-DSP_ARCH = "73"  # For X-Elite device.
+QAIRT_VERSION = "2.44.0.260225"
+DSP_ARCH = ["73", "81"]  # For X-Elite device.
 
 QNN_LIBS_DIR = os.path.join(PLUGIN_DIR, "qnn_assets", "qnn_libs")
 SDK_SAVE_PATH= os.path.join(LONG_PATH_PREFIX_PLUGIN_DIR, f"{QAIRT_VERSION}.zip")
@@ -36,14 +36,19 @@ QNN_SDK_ROOT=f"C:\\Qualcomm\\AIStack\\QAIRT\\{QAIRT_VERSION}"
 
 CONTROLNET_DIR=os.path.join(PLUGIN_DIR, "qnn_assets", "models", "controlnet")
 CACHE_DIR = os.path.join(PLUGIN_DIR, "qnn_assets", "models", "cache")
-TIME_EMBEDDING_PATH=os.path.join(CACHE_DIR, "time-embedding")
-
-HUB_ID="aac24f12d047e7f558d8effe4b2fdad0f5c2c341"
-QAI_HUB_CONFIG = os.path.join(pathlib.Path.home(), ".qai_hub", "client.ini")
-QAI_HUB_CONFIG_BACKUP = os.path.join(pathlib.Path.home(), ".qai_hub", "client.ini.bk")
 CONVERTION_DIR = os.path.join(PLUGIN_DIR, "model_conversion")
-ESRGAN_X4_MODEL_ID="monl8r2wq"
-ESRGAN_X4_MODEL_PATH=os.path.join(CONVERTION_DIR,"esrgan.bin")
 
-TIMESTEP_EMBEDDING_1_5_MODEL_ID="m7mrzdgxn"
-TIMESTEP_EMBEDDING_1_5_MODEL_PATH=os.path.join(CONVERTION_DIR,"time_embedding_sd_1_5.pt")
+#ControlNet -Canny 0.34.3 bin files
+CONTROLNET_HF_URLS = {
+    "controlnet.bin":
+        "https://huggingface.co/qualcomm/ControlNet-Canny/resolve/v0.34.3/precompiled/qualcomm-snapdragon-x-elite/ControlNet-Canny_controlnet_w8a16.bin",
+
+    "text_encoder.bin":
+        "https://huggingface.co/qualcomm/ControlNet-Canny/resolve/v0.34.3/precompiled/qualcomm-snapdragon-x-elite/ControlNet-Canny_text_encoder_w8a16.bin",
+
+    "unet.bin":
+        "https://huggingface.co/qualcomm/ControlNet-Canny/resolve/v0.34.3/precompiled/qualcomm-snapdragon-x-elite/ControlNet-Canny_unet_w8a16.bin",
+
+    "vae.bin":
+        "https://huggingface.co/qualcomm/ControlNet-Canny/resolve/v0.34.3/precompiled/qualcomm-snapdragon-x-elite/ControlNet-Canny_vae_w8a16.bin",
+}

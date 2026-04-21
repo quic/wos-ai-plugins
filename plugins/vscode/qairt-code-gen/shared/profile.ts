@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------------
+// Copyright (c) 2026 Qualcomm Innovation Center, Inc. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// ---------------------------------------------------------------------
 
 enum ProfileSystemPrompt {
   CODE_GENERATION = "Act as an expert python coder complete the python code to run properly using proper imports. Apart from comments, no additional explaination is needed. Provide code in code blocks with ```",

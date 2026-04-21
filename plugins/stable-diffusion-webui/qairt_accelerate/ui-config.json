@@ -829,5 +829,9 @@
     "customscript/qairt_accelerate.py/img2img/Upscale/visible": true,
     "customscript/qairt_accelerate.py/img2img/Upscale/value": false,
     "img2img/Upscaler model to use/visible": true,
-    "img2img/Upscaler model to use/value": ""
+    "img2img/Upscaler model to use/value": "",
+    "customscript/xyz_grid.py/txt2img/Draw grid/visible": true,
+    "customscript/xyz_grid.py/txt2img/Draw grid/value": true,
+    "customscript/xyz_grid.py/img2img/Draw grid/visible": true,
+    "customscript/xyz_grid.py/img2img/Draw grid/value": true
 }
